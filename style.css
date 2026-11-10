@@ -1,0 +1,801 @@
+/* =========================================================
+   GUÍA TÉCNICA PWA & ADAPTABILIDAD MÓVIL (INGE MIGUEL - UPDS)
+   ESTILOS GENERALES CON RESPONSIVIDAD: MÓVIL, LAPTOP Y PC
+   ========================================================= */
+
+/* 1. RESET Y CONFIGURACIÓN BASE (CERO SCROLLBAR GLOBAL) */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', 'Segoe UI', -apple-system, sans-serif;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE y Edge */
+}
+
+/* Regla Universal de Imágenes: Prevenir que cualquier imagen se desborde */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Ocultar scrollbar en Chrome, Safari, Opera y Edge */
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html, body.pwa-no-scrollbar {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* CERO SCROLLBAR DE VENTANA */
+  background-color: #0b0a10;
+  color: #f3f4f6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* En PC y Laptop, centramos vertical y horizontalmente el contenedor */
+@media (min-width: 768px) {
+  body.pwa-no-scrollbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 15%, #1f1a35 0%, #08070d 80%);
+    padding: 16px;
+  }
+}
+
+/* 2. CONTENEDOR PRINCIPAL ADAPTATIVO (RESPONSIVO EN TODOS LOS DISPOSITIVOS) */
+.pwa-container {
+  width: 100%;
+  height: 100dvh;
+  margin: 0 auto;
+  background: #12101b;
+  border-top: 4px solid #f97316; /* Acento Naranja Oficial de la Guía */
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tablet y Laptop (768px a 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .pwa-container {
+    max-width: 740px;
+    height: 94vh;
+    border-radius: 14px;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(249, 115, 22, 0.15);
+  }
+}
+
+/* Laptop Grande y PC de Escritorio (>= 992px) */
+@media (min-width: 992px) {
+  .pwa-container {
+    max-width: 960px;
+    height: 90vh;
+    border-radius: 18px;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(249, 115, 22, 0.2);
+  }
+}
+
+/* 3. ENCABEZADO OFICIAL (Guía Oficial) */
+header {
+  background: #0f172a;
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f97316;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.header-avatar-thumb {
+  width: 38px !important;
+  height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f97316;
+  flex-shrink: 0;
+}
+
+.header-brand-wrap h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.header-brand-wrap small {
+  font-size: 0.72rem;
+  color: #cbd5e1;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: #f97316;
+  font-size: 26px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.btn-theme-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.btn-pwa-badge {
+  background: #f97316;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+/* 4. MENÚ HAMBURGUESA DESPLEGABLE (Guía Oficial) */
+.nav-menu {
+  display: none;
+  position: absolute;
+  top: 62px;
+  left: 0;
+  width: 100%;
+  background: #1e293b;
+  padding: 12px 20px;
+  border-bottom: 2px solid #f97316;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+  z-index: 100;
+}
+
+.nav-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-menu ul li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 13px;
+  display: block;
+}
+
+.nav-menu ul li a:hover {
+  color: #f97316;
+}
+
+/* 5. FILA DE BOTONES HORIZONTAL (RESPONSIVA) */
+.pwa-button-bar-wrap {
+  background: #0f172a;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.pwa-button-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* En Laptop y PC centramos la fila de botones */
+@media (min-width: 768px) {
+  .pwa-button-bar {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 2px 0;
+  }
+}
+
+.pwa-btn-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.pwa-btn-pill:hover {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fff;
+}
+
+.pwa-btn-pill.active {
+  background: #f97316;
+  border-color: #f97316;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
+}
+
+/* 6. VISTAS Y CONTENEDOR DE CONTENIDO (CERO SCROLLBAR) */
+.pwa-viewport-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .pwa-viewport-body {
+    padding: 24px;
+  }
+}
+
+.pwa-section-view {
+  display: none !important;
+}
+
+.pwa-section-view.active {
+  display: block !important;
+  animation: pwaSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pwaSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 7. TARJETAS Y ELEMENTOS MINIMALISTAS RESPONSIVOS */
+.minimal-card {
+  background: #1a1726;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 768px) {
+  .minimal-card {
+    padding: 24px;
+  }
+}
+
+.card-section-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Avatar Perfil - Control Estricto de Tamaño */
+.avatar-glow-wrap {
+  position: relative;
+  width: 120px !important;
+  height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  margin: 0 auto 8px;
+  flex-shrink: 0;
+}
+
+.avatar-glow-img {
+  width: 120px !important;
+  height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 3px solid #f97316 !important;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4) !important;
+  display: block !important;
+  margin: 0 auto;
+}
+
+.avatar-status-badge {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #12101b;
+}
+
+/* Mini Miniaturas de Fotos */
+.mini-thumb-photo {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  cursor: pointer;
+  opacity: 0.65;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.mini-thumb-photo:hover,
+.mini-thumb-photo.active {
+  opacity: 1;
+  border-color: #f97316;
+  transform: scale(1.15);
+}
+
+.profile-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
+.profile-subtitle {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+
+.tags-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.minimal-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 30px;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.minimal-desc {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.55;
+}
+
+.quote-mini-box {
+  background: rgba(15, 23, 42, 0.7);
+  border-left: 3px solid #f97316;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: #f1f5f9;
+}
+
+/* Redes Sociales */
+.social-btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-social {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: transform 0.15s;
+}
+
+.btn-social:hover {
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.btn-social.github { background: #24292e; }
+.btn-social.tiktok { background: #000; border: 1px solid #333; }
+.btn-social.instagram { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
+.btn-social.facebook { background: #1877f2; }
+
+.btn-action-orange {
+  background: #f97316;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  transition: background 0.15s;
+}
+
+.btn-action-orange:hover {
+  background: #ea580c;
+  color: #fff;
+}
+
+/* 8. GRIDS RESPONSIVOS (PASATIEMPOS E INTERESES: 2 COLUMNAS EN MÓVIL / 4 EN LAPTOP Y PC) */
+.responsive-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .responsive-feature-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+}
+
+.mini-feature-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.mini-feature-box:hover {
+  transform: translateY(-3px);
+  border-color: rgba(249, 115, 22, 0.4);
+}
+
+.feature-icon {
+  font-size: 1.35rem;
+}
+
+.mini-feature-box h6 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.mini-feature-box p {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Horario Timeline */
+.btn-schedule-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  padding: 6px;
+}
+
+.btn-schedule-pill.active {
+  background: #f97316;
+  border-color: #f97316;
+  color: #fff;
+  font-weight: 600;
+}
+
+.timeline-compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timeline-row {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #f97316;
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+}
+
+.time-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fb923c;
+  display: block;
+}
+
+.time-text {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* 9. JUEGOS RESPONSIVOS (1 COLUMNA EN MÓVIL / 2 COLUMNAS EN LAPTOP Y PC) */
+.games-filter-scroll-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.btn-filter-bubble {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #cbd5e1;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+}
+
+.btn-filter-bubble.active {
+  background: #f97316;
+  border-color: #f97316;
+  color: #fff;
+  font-weight: 600;
+}
+
+.responsive-games-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .responsive-games-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.game-row-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 8px 10px;
+  transition: transform 0.15s;
+}
+
+.game-row-box:hover {
+  transform: translateX(3px);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.game-thumb {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 8px !important;
+  object-fit: cover !important;
+  flex-shrink: 0;
+}
+
+.game-meta h6 {
+  font-size: 0.85rem;
+  margin: 0;
+  color: #fff;
+}
+
+.game-meta small {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+/* 10. MÚSICA RESPONSIVA (1 COLUMNA EN MÓVIL / 2 COLUMNAS EN LAPTOP Y PC) */
+.responsive-music-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .responsive-music-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.music-link-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #f3f4f6;
+  transition: background 0.15s;
+}
+
+.music-link-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.music-icon-wrap {
+  font-size: 1.4rem;
+}
+
+.music-info strong {
+  display: block;
+  font-size: 0.82rem;
+}
+
+.music-info small {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+/* 11. FILTRO DINÁMICO DE 3 CAPAS (Guía Oficial) */
+.item-card {
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px dashed #f97316;
+  border-radius: 8px;
+  padding: 12px;
+  color: #fed7aa;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* 12. FORMULARIOS & FOCUS NARANJA (Guía Oficial) */
+.custom-input,
+.custom-select-orange {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+  font-size: 0.82rem;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+/* Focus interactivo en campos de formulario con matiz naranja (Guía Oficial) */
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15) !important;
+}
+
+.msg-field-error {
+  color: #ef4444;
+  font-size: 0.72rem;
+  margin-top: 3px;
+  display: none;
+}
+
+.msg-exito {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid #22c55e;
+  color: #86efac;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.78rem;
+}
+
+/* 13. ELEMENTOS PWA: TOAST Y BANNER */
+.pwa-toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 1060;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.pwa-toast.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.pwa-toast.toast-offline { background: rgba(220, 38, 38, 0.95); color: #fff; }
+.pwa-toast.toast-online { background: rgba(22, 163, 74, 0.95); color: #fff; }
+.pwa-toast.toast-info { background: rgba(249, 115, 22, 0.95); color: #fff; }
+
+.pwa-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  width: calc(100% - 32px);
+  max-width: 440px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid #f97316;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.pwa-banner-header { display: flex; align-items: center; gap: 8px; }
+.pwa-banner-icon { width: 38px !important; height: 38px !important; border-radius: 8px; }
+.pwa-banner-info { flex: 1; }
+.pwa-banner-title { font-size: 0.85rem; font-weight: 700; margin: 0; }
+.pwa-banner-desc { font-size: 0.72rem; color: #a1a1aa; margin: 0; }
+.pwa-banner-close { background: none; border: none; color: #a1a1aa; font-size: 1.1rem; cursor: pointer; }
+.pwa-banner-actions { display: flex; gap: 8px; }
+.pwa-banner-actions .btn { flex: 1; font-size: 0.78rem; padding: 5px; border-radius: 6px; }
+
+/* 14. MODO CLARO (Compatible con Guía Oficial) */
+body.light-mode {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+body.light-mode .pwa-container {
+  background-color: #ffffff;
+}
+
+body.light-mode .minimal-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+body.light-mode .profile-title,
+body.light-mode .card-section-heading,
+body.light-mode .mini-feature-box h6,
+body.light-mode .game-meta h6,
+body.light-mode .music-info strong {
+  color: #0f172a;
+}
+
+body.light-mode .custom-input,
+body.light-mode .custom-select-orange {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+body.light-mode .mini-feature-box,
+body.light-mode .game-row-box,
+body.light-mode .music-link-card,
+body.light-mode .timeline-row {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}

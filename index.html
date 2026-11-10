@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- METODO A: Configuración Viewport en <head> (Mandatorio para PWA - Guía Técnica Inge Miguel) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Cristian Neil - Portafolio PWA Oficial</title>
+  <meta name="description" content="Presentación personal, pasatiempos, horario, videojuegos y contacto de Cristian Neil Mamani." />
+
+  <!-- METODO B: Detección por Script de JS (Guía Oficial PWA - inge Miguel) -->
+  <script>
+    if (window.innerWidth <= 768 || /Android|iPhone|iPad/i.test(navigator.userAgent)) {
+      console.log("Dispositivo Móvil o Tablet Detectado: Cargando Modo PWA");
+    }
+  </script>
+
+  <!-- PWA Meta Tags & Manifest -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#f97316" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Cristian Neil" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
+  <link rel="shortcut icon" href="icons/favicon-32.png" />
+
+  <!-- Fuentes e Iconos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  
+  <!-- Estilos CSS con versión para evitar problemas de caché -->
+  <link rel="stylesheet" href="style.css?v=3.1" />
+  <link rel="stylesheet" href="css/style.css?v=3.1" />
+
+  <!-- jQuery & Script Principal -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="script.js?v=3.1" defer></script>
+</head>
+
+<body class="pwa-no-scrollbar">
+
+  <!-- CONTENEDOR PRINCIPAL ADAPTATIVO (MÓVIL, LAPTOP Y PC) -->
+  <div class="pwa-container">
+
+    <!-- CABECERA PRINCIPAL (Estilo Oficial con Acento Naranja) -->
+    <header>
+      <div class="header-brand-wrap d-flex align-items-center gap-2">
+        <img src="img/perfil.jpeg" alt="Avatar" class="header-avatar-thumb" width="38" height="38" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #f97316; flex-shrink: 0;" />
+        <div>
+          <h2>Cristian Neil</h2>
+          <small style="color:#cbd5e1;">Portafolio PWA Oficial • UPDS</small>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <!-- Botón Cambiar Tema -->
+        <button id="themeBtn" class="btn-theme-mini" title="Cambiar tema">
+          <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+        </button>
+
+        <!-- Botón PWA Instalar -->
+        <button id="pwaInstallNavBtn" class="btn-pwa-badge d-none" title="Instalar Aplicación">
+          <i class="bi bi-download"></i>
+          <span>Instalar</span>
+        </button>
+
+        <!-- Botón Menú Hamburguesa Oficial -->
+        <button class="menu-toggle" id="hamburgerBtn" title="Menú">☰</button>
+      </div>
+    </header>
+
+    <!-- MENÚ HAMBURGUESA DESPLEGABLE CON JQUERY SLIDETOGGLE -->
+    <nav class="nav-menu" id="navMenu">
+      <ul>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('inicio')">👤 Inicio / Perfil</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('pasatiempos')">🎮 Pasatiempos</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('intereses')">💡 Intereses</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('horario')">📅 Horario Semanal</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('juegos')">🕹️ Videojuegos</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('musica')">🎵 Música</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('frases')">💬 Frases</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('filtros')">🔍 Filtro de 3 Capas</a></li>
+        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('contacto')">✉️ Formulario de Contacto</a></li>
+      </ul>
+    </nav>
+
+    <!-- FILA DE BOTONES HORIZONTAL MINIMALISTA (ACCIONES DIRECTAS) -->
+    <div class="pwa-button-bar-wrap">
+      <div class="pwa-button-bar">
+        <button class="pwa-btn-pill active" data-seccion="inicio" onclick="mostrarSeccion('inicio')">
+          <i class="bi bi-person-fill"></i> Perfil
+        </button>
+        <button class="pwa-btn-pill" data-seccion="pasatiempos" onclick="mostrarSeccion('pasatiempos')">
+          <i class="bi bi-controller"></i> Pasatiempos
+        </button>
+        <button class="pwa-btn-pill" data-seccion="intereses" onclick="mostrarSeccion('intereses')">
+          <i class="bi bi-lightbulb-fill"></i> Intereses
+        </button>
+        <button class="pwa-btn-pill" data-seccion="horario" onclick="mostrarSeccion('horario')">
+          <i class="bi bi-clock-fill"></i> Horario
+        </button>
+        <button class="pwa-btn-pill" data-seccion="juegos" onclick="mostrarSeccion('juegos')">
+          <i class="bi bi-joystick"></i> Juegos
+        </button>
+        <button class="pwa-btn-pill" data-seccion="musica" onclick="mostrarSeccion('musica')">
+          <i class="bi bi-music-note-beamed"></i> Música
+        </button>
+        <button class="pwa-btn-pill" data-seccion="frases" onclick="mostrarSeccion('frases')">
+          <i class="bi bi-chat-quote-fill"></i> Frases
+        </button>
+        <button class="pwa-btn-pill" data-seccion="filtros" onclick="mostrarSeccion('filtros')">
+          <i class="bi bi-funnel-fill"></i> Filtro UPDS
+        </button>
+        <button class="pwa-btn-pill" data-seccion="contacto" onclick="mostrarSeccion('contacto')">
+          <i class="bi bi-envelope-fill"></i> Contacto
+        </button>
+      </div>
+    </div>
+
+    <!-- CUERPO PRINCIPAL (VISTAS MINIMALISTAS RESPONSIVAS SIN SCROLLBAR) -->
+    <main class="pwa-viewport-body">
+
+      <!-- 1. SECCIÓN: INICIO / PERFIL (ADAPTABLE: MÓVIL, LAPTOP Y PC) -->
+      <section class="pwa-section-view active" id="sec-inicio">
+        <div class="minimal-card profile-responsive-card">
+          <div class="row align-items-center g-4">
+            <!-- Columna Izquierda: Avatar y Datos Rápidos -->
+            <div class="col-md-5 text-center">
+              <div class="avatar-glow-wrap mb-2" style="width: 120px; height: 120px; max-width: 120px; max-height: 120px; margin: 0 auto; position: relative;">
+                <img id="mainProfileAvatar" src="img/perfil.jpeg" alt="Cristian Neil" class="avatar-glow-img" width="120" height="120" style="width: 120px; height: 120px; max-width: 120px; max-height: 120px; border-radius: 50%; object-fit: cover; display: block; border: 3px solid #f97316; box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);" />
+                <span class="avatar-status-badge" title="Activo"></span>
+              </div>
+
+              <!-- Mini Selector de Fotos del Perfil -->
+              <div class="d-flex justify-content-center gap-1 my-2">
+                <img src="img/perfil.jpeg" alt="Foto 1" class="mini-thumb-photo active" onclick="cambiarFotoPerfil('img/perfil.jpeg')" title="Foto Perfil" />
+                <img src="img/tatto.jpeg" alt="Foto 2" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/tatto.jpeg')" title="Tatuaje" />
+                <img src="img/cup.jpeg" alt="Foto 3" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/cup.jpeg')" title="Café" />
+                <img src="img/travel.jpeg" alt="Foto 4" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/travel.jpeg')" title="Viaje" />
+                <img src="img/girl.jpeg" alt="Foto 5" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/girl.jpeg')" title="Foto 5" />
+              </div>
+
+              <h3 class="profile-title">Cristian Neil Mamani</h3>
+              <p class="profile-subtitle">Ingeniería de Sistemas &bull; UPDS La Paz</p>
+
+              <!-- Redes Sociales Directas -->
+              <div class="social-btn-row mt-2">
+                <a href="https://github.com/cristianmamani282-cloud" target="_blank" rel="noopener noreferrer" class="btn-social github" title="GitHub">
+                  <i class="bi bi-github"></i>
+                </a>
+                <a href="https://www.tiktok.com/@neil_san_14?_r=1&_t=ZS-9AyizTX0OX7" target="_blank" rel="noopener noreferrer" class="btn-social tiktok" title="TikTok">
+                  <i class="bi bi-tiktok"></i>
+                </a>
+                <a href="https://www.instagram.com/x_neil_mamani_x?rpxt=bDdkZWoxanZvdjFo" target="_blank" rel="noopener noreferrer" class="btn-social instagram" title="Instagram">
+                  <i class="bi bi-instagram"></i>
+                </a>
+                <a href="https://www.facebook.com/share/1E5eUvUtJ1/" target="_blank" rel="noopener noreferrer" class="btn-social facebook" title="Facebook">
+                  <i class="bi bi-facebook"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Columna Derecha: Biografía, Tags y Acción -->
+            <div class="col-md-7 text-start">
+              <div class="tags-group mb-3">
+                <span class="minimal-tag"><i class="bi bi-code-slash text-warning"></i> Desarrollo Web</span>
+                <span class="minimal-tag"><i class="bi bi-cpu-fill text-info"></i> Inteligencia Artificial</span>
+                <span class="minimal-tag"><i class="bi bi-fire text-danger"></i> PowerLifting</span>
+                <span class="minimal-tag"><i class="bi bi-controller text-success"></i> Gaming</span>
+              </div>
+
+              <p class="minimal-desc">
+                Bienvenido a mi aplicación web progresiva (PWA). Diseñada para ofrecer una experiencia rápida, fluida y con navegación offline completa en dispositivos móviles, tablets, laptops y computadoras de escritorio.
+              </p>
+
+              <div class="quote-mini-box mt-3 mb-3">
+                <i class="bi bi-quote text-warning fs-5"></i> <em>"Carpe Diem: Aprovecha el día, no confíes en el mañana."</em>
+              </div>
+
+              <button class="btn btn-action-orange w-100" onclick="mostrarSeccion('contacto')">
+                <i class="bi bi-send-fill me-1"></i> Contáctame Directamente
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. SECCIÓN: PASATIEMPOS (2 COLUMNAS EN MÓVIL / 4 EN LAPTOP Y PC) -->
+      <section class="pwa-section-view" id="sec-pasatiempos">
+        <div class="minimal-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-section-heading mb-0"><i class="bi bi-controller text-warning me-2"></i>Mis Pasatiempos</h4>
+            <span class="badge bg-secondary">Tiempo Libre</span>
+          </div>
+
+          <div class="responsive-feature-grid">
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-joystick text-danger"></i></div>
+              <h6>Videojuegos en línea</h6>
+              <p>Jugar con amigos internacionales para divertirme y practicar inglés.</p>
+            </div>
+
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-headphones text-info"></i></div>
+              <h6>Escuchar Música</h6>
+              <p>Despejar la mente y relajarme durante entrenamientos o días pesados.</p>
+            </div>
+
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-book-half text-success"></i></div>
+              <h6>Leer Libros</h6>
+              <p>Lectura de libros de fantasía y autoayuda para desconectarme de la rutina.</p>
+            </div>
+
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-activity text-warning"></i></div>
+              <h6>Entrenar en el GYM</h6>
+              <p>Parte fundamental de mi rutina diaria, salud física y bienestar mental.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. SECCIÓN: INTERESES (2 COLUMNAS EN MÓVIL / 4 EN LAPTOP Y PC) -->
+      <section class="pwa-section-view" id="sec-intereses">
+        <div class="minimal-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-section-heading mb-0"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Áreas de Interés</h4>
+            <span class="badge bg-secondary">Formación</span>
+          </div>
+
+          <div class="responsive-feature-grid">
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-cpu-fill text-info"></i></div>
+              <h6>Programación con IA</h6>
+              <p>Desarrollo de sistemas aprovechando modelos de IA con revisión exhaustiva de código.</p>
+            </div>
+
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-translate text-success"></i></div>
+              <h6>Aprender Inglés</h6>
+              <p>Estudio de idioma para oportunidades globales y comunicación internacional.</p>
+            </div>
+
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-tools text-primary"></i></div>
+              <h6>Mantenimiento PC</h6>
+              <p>Mantenimiento preventivo y correctivo de hardware y software desde pequeño.</p>
+            </div>
+
+            <div class="mini-feature-box">
+              <div class="feature-icon"><i class="bi bi-fire text-danger"></i></div>
+              <h6>PowerLifting</h6>
+              <p>Entrenamiento de fuerza competitiva para preparación en torneos deportivos.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. SECCIÓN: HORARIO -->
+      <section class="pwa-section-view" id="sec-horario">
+        <div class="minimal-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-section-heading mb-0"><i class="bi bi-clock-history text-warning me-2"></i>Horario Semanal</h4>
+            <span class="badge" style="background:#f97316; color:#fff;">Organización</span>
+          </div>
+
+          <div class="btn-group w-100 mb-3" role="group">
+            <button type="button" class="btn btn-schedule-pill active" onclick="mostrarHorario('semana')">Lun - Vie</button>
+            <button type="button" class="btn btn-schedule-pill" onclick="mostrarHorario('sabado')">Sábado</button>
+            <button type="button" class="btn btn-schedule-pill" onclick="mostrarHorario('domingo')">Domingo</button>
+          </div>
+
+          <div class="timeline-compact-list" id="horario-semana">
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-alarm"></i> Mañana - 12:00 PM</span>
+              <p class="time-text">Clases presenciales en la universidad (UPDS).</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-egg-fried"></i> 12:00 PM - 03:00 PM</span>
+              <p class="time-text">Entrenamiento físico en el GYM y almuerzo nutritivo.</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-translate"></i> 03:00 PM - 05:00 PM</span>
+              <p class="time-text">Clases de inglés para perfeccionar el idioma.</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-briefcase"></i> 05:00 PM - 10:00 PM</span>
+              <p class="time-text">Jornada laboral en el trabajo.</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-moon-stars"></i> 10:00 PM en adelante</span>
+              <p class="time-text">Cena, videojuegos con amigos y descanso reparador.</p>
+            </div>
+          </div>
+
+          <div class="timeline-compact-list d-none" id="horario-sabado">
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-alarm"></i> Mañana</span>
+              <p class="time-text">Entrenamiento matutino y preparación del día.</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-journal-code"></i> Tarde</span>
+              <p class="time-text">Estudio, resolución de tareas universitarias y código.</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-controller"></i> Noche</span>
+              <p class="time-text">Repaso académico, juegos y descanso personal.</p>
+            </div>
+          </div>
+
+          <div class="timeline-compact-list d-none" id="horario-domingo">
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-sun"></i> Mañana & Mediodía</span>
+              <p class="time-text">Despertar con calma y almuerzo familiar.</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-tree"></i> Tarde</span>
+              <p class="time-text">Salidas de ocio, caminatas o actividades recreativas.</p>
+            </div>
+            <div class="timeline-row">
+              <span class="time-badge"><i class="bi bi-battery-charging"></i> Noche</span>
+              <p class="time-text">Descanso temprano para iniciar con energía la semana.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. SECCIÓN: VIDEOJUEGOS (RESPONSIVO EN GRID) -->
+      <section class="pwa-section-view" id="sec-juegos">
+        <div class="minimal-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h4 class="card-section-heading mb-0"><i class="bi bi-joystick text-warning me-2"></i>Juegos Favoritos</h4>
+            <!-- Filtro de Juegos -->
+            <div class="games-filter-scroll-bar">
+              <button class="btn btn-filter-bubble active" data-filter="todos" onclick="filtrar('todos')">Todos</button>
+              <button class="btn btn-filter-bubble" data-filter="sandbox" onclick="filtrar('sandbox')">Minecraft</button>
+              <button class="btn btn-filter-bubble" data-filter="accion" onclick="filtrar('accion')">GTA</button>
+              <button class="btn btn-filter-bubble" data-filter="deportes" onclick="filtrar('deportes')">EA FC</button>
+              <button class="btn btn-filter-bubble" data-filter="lucha" onclick="filtrar('lucha')">Tekken 7</button>
+              <button class="btn btn-filter-bubble" data-filter="roguelike" onclick="filtrar('roguelike')">Isaac</button>
+            </div>
+          </div>
+
+          <div class="responsive-games-grid">
+            <div class="game-row-box game-row" data-categoria="sandbox">
+              <img src="juegos/minecraft.webp" alt="Minecraft" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
+              <div class="game-meta">
+                <h6>Minecraft</h6>
+                <small>Sandbox & Supervivencia • Horas de diversión</small>
+              </div>
+            </div>
+
+            <div class="game-row-box game-row" data-categoria="accion">
+              <img src="juegos/gta.jpg" alt="GTA" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
+              <div class="game-meta">
+                <h6>Grand Theft Auto (GTA)</h6>
+                <small>Mundo Abierto & Acción • Multijugador online</small>
+              </div>
+            </div>
+
+            <div class="game-row-box game-row" data-categoria="deportes">
+              <img src="juegos/fc.jpg" alt="EA FC" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
+              <div class="game-meta">
+                <h6>EA Sports FC</h6>
+                <small>Deportes & Fútbol • Con familiares y amigos</small>
+              </div>
+            </div>
+
+            <div class="game-row-box game-row" data-categoria="lucha">
+              <img src="juegos/tekken7.jpg" alt="Tekken 7" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
+              <div class="game-meta">
+                <h6>Tekken 7</h6>
+                <small>Lucha & Arcade • Desde el mítico Tekken Tag</small>
+              </div>
+            </div>
+
+            <div class="game-row-box game-row" data-categoria="roguelike">
+              <img src="juegos/the-binding-of-isaac-rebirth.jpg" alt="Isaac" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
+              <div class="game-meta">
+                <h6>The Binding of Isaac: Rebirth</h6>
+                <small>Roguelike & Aventura • Cada partida es única</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. SECCIÓN: MÚSICA (RESPONSIVA EN GRID) -->
+      <section class="pwa-section-view" id="sec-musica">
+        <div class="minimal-card">
+          <h4 class="card-section-heading mb-3"><i class="bi bi-music-note-beamed text-warning me-2"></i>Música Favorita</h4>
+
+          <div class="responsive-music-grid">
+            <a href="https://www.youtube.com/watch?v=4TnoY0MBm48" target="_blank" rel="noopener noreferrer" class="music-link-card">
+              <div class="music-icon-wrap"><i class="bi bi-youtube text-danger"></i></div>
+              <div class="music-info">
+                <strong>José Madero</strong>
+                <small>Postales Desde el Fin Del Mundo</small>
+              </div>
+              <i class="bi bi-box-arrow-up-right ms-auto text-muted"></i>
+            </a>
+
+            <a href="https://www.youtube.com/watch?v=wgvqiH7iCRo" target="_blank" rel="noopener noreferrer" class="music-link-card">
+              <div class="music-icon-wrap"><i class="bi bi-youtube text-danger"></i></div>
+              <div class="music-info">
+                <strong>DUKI, Myke Towers</strong>
+                <small>Nueva Era</small>
+              </div>
+              <i class="bi bi-box-arrow-up-right ms-auto text-muted"></i>
+            </a>
+
+            <a href="https://www.youtube.com/watch?v=SWdJdGYfYPw" target="_blank" rel="noopener noreferrer" class="music-link-card">
+              <div class="music-icon-wrap"><i class="bi bi-youtube text-danger"></i></div>
+              <div class="music-info">
+                <strong>Imagine Dragons</strong>
+                <small>Monster</small>
+              </div>
+              <i class="bi bi-box-arrow-up-right ms-auto text-muted"></i>
+            </a>
+
+            <a href="https://open.spotify.com/playlist/5pnAScR27L9Y1GuGvEzur8?si=gIIr9ti5TF6X7F1DX4wXkQ&utm_source=whatsapp&pi=qFkyOfgKT_yrt" target="_blank" rel="noopener noreferrer" class="music-link-card spotify-border">
+              <div class="music-icon-wrap"><i class="bi bi-spotify text-success"></i></div>
+              <div class="music-info">
+                <strong>Mi Playlist de Spotify</strong>
+                <small>Entrenamiento & Rock / Pop</small>
+              </div>
+              <i class="bi bi-box-arrow-up-right ms-auto text-success"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. SECCIÓN: FRASES (RESPONSIVA) -->
+      <section class="pwa-section-view" id="sec-frases">
+        <div class="minimal-card text-center">
+          <h4 class="card-section-heading mb-3"><i class="bi bi-chat-quote-fill text-warning me-2"></i>Frases Inspiradoras</h4>
+
+          <div class="row g-3 justify-content-center">
+            <div class="col-6 col-md-4">
+              <div class="quote-image-box">
+                <img src="img/carpediem.jpg" alt="Carpe Diem" class="img-fluid rounded" style="max-height: 160px; object-fit: cover; width: 100%; border: 1px solid rgba(249, 115, 22, 0.3);" />
+              </div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div class="quote-image-box">
+                <img src="img/descarga.jpg" alt="Frase 2" class="img-fluid rounded" style="max-height: 160px; object-fit: cover; width: 100%; border: 1px solid rgba(249, 115, 22, 0.3);" />
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="quote-image-box">
+                <img src="img/images.jpg" alt="Frase 3" class="img-fluid rounded" style="max-height: 160px; object-fit: cover; width: 100%; border: 1px solid rgba(249, 115, 22, 0.3);" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. SECCIÓN: FILTRO DE 3 CAPAS (CÓDIGO OFICIAL GUÍA INGE MIGUEL) -->
+      <section class="pwa-section-view" id="sec-filtros">
+        <div class="minimal-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-section-heading mb-0"><i class="bi bi-funnel-fill text-warning me-2"></i>Filtro Dinámico de 3 Capas</h4>
+            <span class="badge" style="background:#f97316; color:#fff;">Guía Oficial</span>
+          </div>
+          <p class="small text-muted mb-3">Filtro en cascada requerido por el docente (UPDS).</p>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6 text-start">
+              <label for="capa1" class="form-label small fw-semibold">Capa 1: Área de Estudio</label>
+              <select id="capa1" class="form-select custom-select-orange">
+                <option value="">-- Elija Área --</option>
+                <option value="academico">Académico (UPDS)</option>
+                <option value="desarrollo">Desarrollo Software</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 text-start">
+              <label for="capa2" class="form-label small fw-semibold">Capa 2: Especialidad / Materia</label>
+              <select id="capa2" class="form-select custom-select-orange" disabled>
+                <option value="">-- Primero elija área --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="text-start">
+            <label class="form-label small text-muted fw-semibold">Capa 3: Resultado del Filtro</label>
+            <div id="resultadoFiltro" class="item-card">Seleccione las capas anteriores...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. SECCIÓN: CONTACTO (CÓDIGO OFICIAL GUÍA + SOPORTE OFFLINE PWA) -->
+      <section class="pwa-section-view" id="sec-contacto">
+        <div class="minimal-card text-start">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-section-heading mb-0"><i class="bi bi-envelope-fill text-warning me-2"></i>Contáctame</h4>
+            <span class="badge bg-success"><i class="bi bi-wifi-off"></i> PWA Offline</span>
+          </div>
+
+          <form id="pwaForm" novalidate>
+            <div class="row g-2 mb-2">
+              <div class="col-md-6">
+                <label for="nombre" class="form-label small fw-semibold">Nombre Completo <span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input" id="nombre" placeholder="Ingresa tu nombre" autocomplete="off" />
+                <div id="errNombre" class="msg-field-error">⚠️ Esta casilla es obligatoria (solo letras).</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="correo" class="form-label small fw-semibold">Correo Electrónico <span class="text-danger">*</span></label>
+                <input type="email" class="form-control custom-input" id="correo" placeholder="correo@ejemplo.com" autocomplete="off" />
+                <div id="errCorreo" class="msg-field-error">⚠️ Ingresa un correo electrónico válido.</div>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label for="telefono" class="form-label small fw-semibold">Número de Teléfono</label>
+              <div class="input-group">
+                <select id="codigoPais" class="form-select custom-select-orange" style="max-width: 105px;">
+                  <option value="+591" selected>🇧🇴 +591</option>
+                  <option value="+54">🇦🇷 +54</option>
+                  <option value="+51">🇵🇪 +51</option>
+                  <option value="+56">🇨🇱 +56</option>
+                  <option value="+1">🇺🇸 +1</option>
+                </select>
+                <input type="text" class="form-control custom-input" id="telefono" placeholder="Número celular" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="mensaje" class="form-label small fw-semibold">Mensaje</label>
+              <textarea class="form-control custom-input" id="mensaje" rows="3" placeholder="Escribe tu mensaje..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-action-orange w-100">
+              <i class="bi bi-send-fill me-1"></i> Enviar Mensaje
+            </button>
+          </form>
+
+          <div id="successAlert" class="msg-exito mt-3" style="display: none;">
+            ✅ ¡Formulario enviado con éxito! Gracias por tu mensaje.
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- PWA TOAST DE CONEXIÓN (ONLINE / OFFLINE) -->
+  <div id="pwaToast" class="pwa-toast" role="alert" aria-live="assertive">
+    <i class="bi bi-info-circle-fill" id="pwaToastIcon"></i>
+    <span id="pwaToastMsg"></span>
+  </div>
+
+  <!-- PWA BANNER FLOTANTE DE INSTALACIÓN -->
+  <div id="pwaBanner" class="pwa-banner d-none">
+    <div class="pwa-banner-header">
+      <img src="icons/icon-96.png" alt="Icono" class="pwa-banner-icon" width="38" height="38" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover;" />
+      <div class="pwa-banner-info">
+        <h5 class="pwa-banner-title">Instalar Presentación</h5>
+        <p class="pwa-banner-desc">Acceso rápido y funcionamiento sin conexión</p>
+      </div>
+      <button id="pwaBannerCloseBtn" class="pwa-banner-close" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="pwa-banner-actions">
+      <button id="pwaBannerDismissBtn" class="btn btn-outline-secondary btn-sm text-light">Más tarde</button>
+      <button id="pwaBannerInstallBtn" class="btn btn-action-orange btn-sm py-1">
+        <i class="bi bi-download me-1"></i> Instalar
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL DE AYUDA PARA IPHONE / SAFARI -->
+  <div class="modal fade" id="pwaIosModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-start" style="background: #13101d; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 16px; color: #f3f4f6;">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">
+            <i class="bi bi-apple me-2 text-warning"></i>Instalar en iPhone o iPad
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ol class="ps-3 mb-3" style="line-height: 1.8;">
+            <li>Pulsa el botón <strong>Compartir</strong> <i class="bi bi-box-arrow-up text-primary"></i> en Safari.</li>
+            <li>Selecciona <strong>"Agregar a pantalla de inicio"</strong> <i class="bi bi-plus-square text-success"></i>.</li>
+            <li>Confirma pulsando <strong>"Agregar"</strong>.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
