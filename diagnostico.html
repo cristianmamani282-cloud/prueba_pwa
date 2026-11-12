@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analizador de Código PWA / DOM • UPDS La Paz</title>
+  <link rel="icon" type="image/png" href="icons/favicon-32.png" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      padding: 15px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .btn-back {
+      background: #334155;
+      color: #fff;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn-back:hover {
+      background: #475569;
+    }
+
+    .box {
+      background: #1e293b;
+      padding: 18px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      background: #0f172a;
+      color: #fde047;
+      border: 1px solid #334155;
+      padding: 10px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      border-radius: 6px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #ea580c;
+    }
+
+    .btn-secondary {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .btn-secondary:hover {
+      background: #0ea5e9;
+    }
+
+    .result {
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: none;
+    }
+
+    .badge-danger {
+      background: #ef4444;
+      color: white;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .badge-success {
+      background: #22c55e;
+      color: white;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .meta-tag {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header-nav">
+      <div>
+        <h3 style="margin:0; color:#f97316;">UPDS La Paz • Diseño Web II</h3>
+        <span class="meta-tag">Material de Clase Oficial: Event Bubbling & Diagnóstico PWA (inge Miguel)</span>
+      </div>
+      <a href="index.html" class="btn-back">← Volver al Portafolio</a>
+    </div>
+
+    <div class="box">
+      <h2 style="color:#f97316; margin-top:0;">🔍 Diagnóstico de Código PWA & Bloqueos DOM</h2>
+      <p style="font-size:12px; color:#cbd5e1;">
+        Pega tu código HTML/CSS abajo para detectar clases bloqueadas por Brave/Opera o ineficiencias de memoria:
+      </p>
+      <textarea id="codigoInput" placeholder="Pega aquí tu HTML/CSS..."></textarea>
+      <div class="btn-group">
+        <button class="btn" id="btnAnalizar">Analizar y Optimizar Código</button>
+        <button class="btn btn-secondary" id="btnCargarApp">Cargar Código de Mi Portafolio PWA</button>
+      </div>
+    </div>
+
+    <div id="panelResultado" class="box result">
+      <h3 style="margin-top:0;">Informe de Diagnóstico y Viabilidad:</h3>
+      <div id="detallesReporte" style="font-size:13px; margin:10px 0;"></div>
+      <h4 style="color:#f97316;">Código Sugerido/Optimizado:</h4>
+      <textarea id="codigoSugerido" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      // 1. Cargar código de nuestro index.html para prueba rápida
+      $('#btnCargarApp').click(function() {
+        $.get('index.html', function(data) {
+          $('#codigoInput').val(data);
+          $('#btnAnalizar').click();
+        }).fail(function() {
+          alert('Para cargar index.html localmente, ejecuta la PWA en un servidor web local (Live Server o HTTP).');
+        });
+      });
+
+      // 2. Analizador de Código oficial de la Guía Técnica
+      $('#btnAnalizar').click(function() {
+        let src = $('#codigoInput').val();
+        if (!src.trim()) return alert('Por favor pega algún código.');
+
+        let hallazgos = [];
+        let limpio = src;
+
+        // 1. Detección de nombres de clases bloqueadas por Brave/Opera
+        let clasesBloqueo = [/ad-banner/gi, /promo-box/gi, /social-ads/gi, /analytics/gi, /tracker/gi];
+        clasesBloqueo.forEach(regex => {
+          if (regex.test(src)) {
+            hallazgos.push('<span class="badge-danger">BLOQUEO GRAVE</span> Detectada clase sospechosa ' + regex + ' (Brave/Opera la ocultarán).');
+            limpio = limpio.replace(regex, 'seccion-destacada');
+          }
+        });
+
+        // 2. Detección de Viewport rígido
+        if (/100vh/gi.test(src) && !/min-height/gi.test(src)) {
+          hallazgos.push('<span class="badge-danger">DESBORDAMIENTO</span> Se detectó 100vh rígido. Reemplazar por min-height: 100dvh.');
+          limpio = limpio.replace(/height:\s*100vh;/gi, 'min-height: 100dvh;');
+        }
+
+        // 3. Evaluación de Viabilidad
+        let viabilidad = hallazgos.length <= 2
+          ? '<span class="badge-success">CÓDIGO RESCATABLE</span> Aplica los cambios sugeridos abajo.'
+          : '<span class="badge-danger">REFACTORIZAR</span> Demasiadas inconsistencias, conviene rehacer la maquetación.';
+
+        let htmlReporte = '<p><b>Dictamen:</b> ' + viabilidad + '</p><ul style="padding-left:20px;">';
+        hallazgos.forEach(h => htmlReporte += '<li style="margin-bottom:4px;">' + h + '</li>');
+
+        if (hallazgos.length === 0) {
+          htmlReporte += '<li><span class="badge-success">EXCELENTE</span> No se encontraron nombres de clases bloqueables ni errores de viewport. La estructura cumple con la Guía Técnica UPDS.</li>';
+        }
+        htmlReporte += '</ul>';
+
+        $('#detallesReporte').html(htmlReporte);
+        $('#codigoSugerido').val(limpio);
+        $('#panelResultado').slideDown();
+      });
+    });
+  </script>
+</body>
+
+</html>
+

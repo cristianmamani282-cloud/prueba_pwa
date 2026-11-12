@@ -3,21 +3,22 @@
 
 <head>
   <meta charset="UTF-8" />
-  <!-- METODO A: Configuración Viewport en <head> (Mandatorio para PWA - Guía Técnica Inge Miguel) -->
+  <!-- METODO A: Viewport Configuración PWA (Guía Técnica Inge Miguel) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Cristian Neil - Portafolio PWA Oficial</title>
-  <meta name="description" content="Presentación personal, pasatiempos, horario, videojuegos y contacto de Cristian Neil Mamani." />
+  <title>Cristian Neil Mamani • Portafolio PWA Oficial</title>
+  <meta name="description" content="Portafolio personal interactivo PWA de Cristian Neil Mamani: Mi Mundo, Fotos, Agenda, Música, Frases y Redes." />
 
-  <!-- METODO B: Detección por Script de JS (Guía Oficial PWA - inge Miguel) -->
+  <!-- METODO B: Detección por Script de JS (Guía Oficial PWA) -->
   <script>
     if (window.innerWidth <= 768 || /Android|iPhone|iPad/i.test(navigator.userAgent)) {
-      console.log("Dispositivo Móvil o Tablet Detectado: Cargando Modo PWA");
+      console.log("Dispositivo Móvil Detectado: Cargando experiencia PWA");
     }
   </script>
 
-  <!-- PWA Meta Tags & Manifest -->
+  <!-- PWA Meta Tags & Manifest (Guía Técnica Inge Miguel) -->
+  <link rel="manifest" href="manifest.json" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#f97316" />
+  <meta name="theme-color" content="#0d0a17" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -29,574 +30,969 @@
   <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
   <link rel="shortcut icon" href="icons/favicon-32.png" />
 
-  <!-- Fuentes e Iconos -->
+  <!-- Fuentes de Google: Poppins, Inter y Caveat -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Iconos Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-  
-  <!-- Estilos CSS con versión para evitar problemas de caché -->
-  <link rel="stylesheet" href="style.css?v=3.1" />
-  <link rel="stylesheet" href="css/style.css?v=3.1" />
 
-  <!-- jQuery & Script Principal -->
+  <!-- Hojas de Estilos -->
+  <link rel="stylesheet" href="style.css?v=7.0" />
+
+  <!-- jQuery y Scripts -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="script.js?v=3.1" defer></script>
+  <script src="script.js?v=7.0" defer></script>
 </head>
 
 <body class="pwa-no-scrollbar">
 
-  <!-- CONTENEDOR PRINCIPAL ADAPTATIVO (MÓVIL, LAPTOP Y PC) -->
-  <div class="pwa-container">
+  <!-- CONTENEDOR PRINCIPAL PWA (SIN BORDES DE CELULAR FALSO NI RELOJ, ENFOCADO 100% EN LA APP) -->
+  <div class="pwa-app-wrapper pwa-container" id="pwaContainer">
 
-    <!-- CABECERA PRINCIPAL (Estilo Oficial con Acento Naranja) -->
-    <header>
-      <div class="header-brand-wrap d-flex align-items-center gap-2">
-        <img src="img/perfil.jpeg" alt="Avatar" class="header-avatar-thumb" width="38" height="38" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #f97316; flex-shrink: 0;" />
-        <div>
-          <h2>Cristian Neil</h2>
-          <small style="color:#cbd5e1;">Portafolio PWA Oficial • UPDS</small>
+    <!-- ====================================================================
+         1. BARRA SUPERIOR GLOBAL PERSISTENTE EN CADA UNA DE LAS PÁGINAS
+         (CONTIENE EL BOTÓN DE HIDRATACIÓN Y ACCESO AL MENÚ EN TODO MOMENTO)
+         ==================================================================== -->
+    <header class="pwa-global-header">
+      <div class="header-left d-flex align-items-center gap-2">
+        <img src="img/perfil.jpeg" alt="Avatar" class="header-mini-avatar" onclick="abrirPanel('principal')" style="cursor: pointer;" />
+        <div class="header-text-info" onclick="abrirPanel('principal')" style="cursor: pointer;">
+          <h2 class="header-brand-name mb-0">Cristian Neil</h2>
+          <small class="header-brand-sub">Portafolio PWA</small>
         </div>
       </div>
 
-      <div class="d-flex align-items-center gap-2">
-        <!-- Botón Cambiar Tema -->
-        <button id="themeBtn" class="btn-theme-mini" title="Cambiar tema">
-          <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+      <div class="header-right d-flex align-items-center gap-2">
+        <!-- DETECTOR VISUAL DE ESTADO OFFLINE/ONLINE (SECCIÓN 6 GUÍA INGE MIGUEL) -->
+        <span id="estadoRed" class="badge-estado-red" title="Detector de red en tiempo real">🟢 En Línea</span>
+
+        <!-- BOTÓN OFICIAL DISPARADOR DE HIDRATACIÓN SSR (VISIBLE EN CADA PÁGINA) -->
+        <button id="btnHidratar" class="btn-global-hydrate" title="Presiona para Hidratar la interfaz">
+          <i class="bi bi-lightning-charge-fill text-warning"></i>
+          <span>⚡ Hidratar</span>
         </button>
 
-        <!-- Botón PWA Instalar -->
-        <button id="pwaInstallNavBtn" class="btn-pwa-badge d-none" title="Instalar Aplicación">
+        <!-- ESTRUCTURA SERVIDA ORIGINALMENTE PARA HIDRATACIÓN SSR -->
+        <div id="contenedorMenu" data-hidratado="false" class="d-inline-block">
+          <button id="btnPWA" class="btn-global-menu btn-estatico" title="Cargando Menú...">
+            Cargando Menú...
+          </button>
+        </div>
+
+        <!-- Botón PWA Instalar (disponible en prompt) -->
+        <button id="pwaInstallNavBtn" class="btn-global-install d-none" title="Instalar Aplicación">
           <i class="bi bi-download"></i>
-          <span>Instalar</span>
         </button>
-
-        <!-- Botón Menú Hamburguesa Oficial -->
-        <button class="menu-toggle" id="hamburgerBtn" title="Menú">☰</button>
       </div>
     </header>
 
-    <!-- MENÚ HAMBURGUESA DESPLEGABLE CON JQUERY SLIDETOGGLE -->
+    <!-- MENÚ HAMBURGUESA RÁPIDO DESPLEGABLE -->
     <nav class="nav-menu" id="navMenu">
+      <div class="p-2 border-bottom border-secondary mb-2 d-flex justify-content-between align-items-center">
+        <span class="small fw-bold text-gradient">Navegación Rápida PWA</span>
+        <button class="btn btn-sm btn-link text-light text-decoration-none" onclick="cerrarMenu()">✕</button>
+      </div>
       <ul>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('inicio')">👤 Inicio / Perfil</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('pasatiempos')">🎮 Pasatiempos</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('intereses')">💡 Intereses</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('horario')">📅 Horario Semanal</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('juegos')">🕹️ Videojuegos</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('musica')">🎵 Música</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('frases')">💬 Frases</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('filtros')">🔍 Filtro de 3 Capas</a></li>
-        <li><a href="javascript:void(0)" class="nav-menu-link" onclick="mostrarSeccion('contacto')">✉️ Formulario de Contacto</a></li>
+        <li><a href="javascript:void(0)" onclick="abrirPanel('principal')"><i class="bi bi-house-door-fill text-danger me-2"></i>Inicio / Principal</a></li>
+        <li><a href="javascript:void(0)" onclick="abrirPanel('mi-mundo')"><i class="bi bi-controller text-primary me-2"></i>Mi Mundo (Lenguajes, Anime & Juegos)</a></li>
+        <li><a href="javascript:void(0)" onclick="abrirPanel('fotos')"><i class="bi bi-images text-danger me-2"></i>Fotos / Galería Real</a></li>
+        <li><a href="javascript:void(0)" onclick="abrirPanel('agenda')"><i class="bi bi-calendar3 text-warning me-2"></i>Agenda & Horarios (Modo Lista)</a></li>
+        <li><a href="javascript:void(0)" onclick="abrirPanel('musica')"><i class="bi bi-youtube text-danger me-2"></i>Música (Videos YouTube)</a></li>
+        <li><a href="javascript:void(0)" onclick="abrirPanel('frases')"><i class="bi bi-quote text-secondary me-2"></i>Frases (Imágenes de Frases)</a></li>
+        <li><a href="javascript:void(0)" onclick="abrirPanel('redes')"><i class="bi bi-share-fill text-success me-2"></i>Redes & Contacto</a></li>
+        <li class="border-top border-secondary pt-2 mt-1"><a href="diagnostico.html" target="_blank"><i class="bi bi-shield-check text-warning me-2"></i>Diagnóstico PWA & DOM (Inge Miguel)</a></li>
       </ul>
     </nav>
 
-    <!-- FILA DE BOTONES HORIZONTAL MINIMALISTA (ACCIONES DIRECTAS) -->
-    <div class="pwa-button-bar-wrap">
-      <div class="pwa-button-bar">
-        <button class="pwa-btn-pill active" data-seccion="inicio" onclick="mostrarSeccion('inicio')">
-          <i class="bi bi-person-fill"></i> Perfil
-        </button>
-        <button class="pwa-btn-pill" data-seccion="pasatiempos" onclick="mostrarSeccion('pasatiempos')">
-          <i class="bi bi-controller"></i> Pasatiempos
-        </button>
-        <button class="pwa-btn-pill" data-seccion="intereses" onclick="mostrarSeccion('intereses')">
-          <i class="bi bi-lightbulb-fill"></i> Intereses
-        </button>
-        <button class="pwa-btn-pill" data-seccion="horario" onclick="mostrarSeccion('horario')">
-          <i class="bi bi-clock-fill"></i> Horario
-        </button>
-        <button class="pwa-btn-pill" data-seccion="juegos" onclick="mostrarSeccion('juegos')">
-          <i class="bi bi-joystick"></i> Juegos
-        </button>
-        <button class="pwa-btn-pill" data-seccion="musica" onclick="mostrarSeccion('musica')">
-          <i class="bi bi-music-note-beamed"></i> Música
-        </button>
-        <button class="pwa-btn-pill" data-seccion="frases" onclick="mostrarSeccion('frases')">
-          <i class="bi bi-chat-quote-fill"></i> Frases
-        </button>
-        <button class="pwa-btn-pill" data-seccion="filtros" onclick="mostrarSeccion('filtros')">
-          <i class="bi bi-funnel-fill"></i> Filtro UPDS
-        </button>
-        <button class="pwa-btn-pill" data-seccion="contacto" onclick="mostrarSeccion('contacto')">
-          <i class="bi bi-envelope-fill"></i> Contacto
-        </button>
-      </div>
-    </div>
+    <!-- ====================================================================
+         2. CUERPO DE PANELES (SIN SCROLLBARS DE VENTANA / NAVEGACIÓN INSTANTÁNEA)
+         ==================================================================== -->
+    <main class="pwa-main-viewport">
 
-    <!-- CUERPO PRINCIPAL (VISTAS MINIMALISTAS RESPONSIVAS SIN SCROLLBAR) -->
-    <main class="pwa-viewport-body">
+      <!-- ====================================================================
+           A. PANTALLA PRINCIPAL (HOME SCREEN CON AVATAR NEON Y 6 ACCIONES)
+           ==================================================================== -->
+      <section class="pwa-screen-panel active" id="panel-principal">
+        
+        <!-- Hero Header con Gráfico Sunset de La Paz -->
+        <div class="hero-dusk-banner">
+          <div class="hero-top-meta d-flex justify-content-between">
+            <div class="meta-motto">
+              <span>DISCIPLINA</span>
+              <span>HOY</span>
+              <span>RESULTADOS</span>
+              <span>MAÑANA</span>
+            </div>
+            <div class="meta-location text-end">
+              <span>LA PAZ</span>
+              <span>BOLIVIA</span>
+            </div>
+          </div>
 
-      <!-- 1. SECCIÓN: INICIO / PERFIL (ADAPTABLE: MÓVIL, LAPTOP Y PC) -->
-      <section class="pwa-section-view active" id="sec-inicio">
-        <div class="minimal-card profile-responsive-card">
-          <div class="row align-items-center g-4">
-            <!-- Columna Izquierda: Avatar y Datos Rápidos -->
-            <div class="col-md-5 text-center">
-              <div class="avatar-glow-wrap mb-2" style="width: 120px; height: 120px; max-width: 120px; max-height: 120px; margin: 0 auto; position: relative;">
-                <img id="mainProfileAvatar" src="img/perfil.jpeg" alt="Cristian Neil" class="avatar-glow-img" width="120" height="120" style="width: 120px; height: 120px; max-width: 120px; max-height: 120px; border-radius: 50%; object-fit: cover; display: block; border: 3px solid #f97316; box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);" />
-                <span class="avatar-status-badge" title="Activo"></span>
-              </div>
+          <!-- Avatar Circular con Anillo Neón Magenta -->
+          <div class="avatar-neon-wrap">
+            <div class="avatar-glow-ring">
+              <img id="mainHeroAvatar" src="img/perfil.jpeg" alt="Cristian Neil Mamani" class="avatar-hero-img" />
+              <span class="avatar-neon-dot" title="En línea"></span>
+            </div>
+          </div>
+        </div>
 
-              <!-- Mini Selector de Fotos del Perfil -->
-              <div class="d-flex justify-content-center gap-1 my-2">
-                <img src="img/perfil.jpeg" alt="Foto 1" class="mini-thumb-photo active" onclick="cambiarFotoPerfil('img/perfil.jpeg')" title="Foto Perfil" />
-                <img src="img/tatto.jpeg" alt="Foto 2" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/tatto.jpeg')" title="Tatuaje" />
-                <img src="img/cup.jpeg" alt="Foto 3" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/cup.jpeg')" title="Café" />
-                <img src="img/travel.jpeg" alt="Foto 4" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/travel.jpeg')" title="Viaje" />
-                <img src="img/girl.jpeg" alt="Foto 5" class="mini-thumb-photo" onclick="cambiarFotoPerfil('img/girl.jpeg')" title="Foto 5" />
-              </div>
+        <!-- Información del Perfil -->
+        <div class="hero-profile-info text-center px-3 pt-2">
+          <h1 class="hero-name">Cristian Neil Mamani</h1>
+          <p class="hero-title">Estudiante de Ingeniería de Sistemas</p>
+          <div class="hero-badge-location">
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i> La Paz, Bolivia
+          </div>
+          <p class="hero-quote">“Crea la vida que te emocione.”</p>
+        </div>
 
-              <h3 class="profile-title">Cristian Neil Mamani</h3>
-              <p class="profile-subtitle">Ingeniería de Sistemas &bull; UPDS La Paz</p>
+        <!-- Barra de Progreso / En Constante Evolución -->
+        <div class="progress-pill-card mx-3 my-2">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <div class="d-flex align-items-center gap-2">
+              <span class="code-symbol-purple">&lt;/&gt;</span>
+              <span class="progress-label">En constante evolución...</span>
+            </div>
+            <span class="progress-value">80%</span>
+          </div>
+          <div class="progress-track-bg">
+            <div class="progress-track-fill" style="width: 80%;"></div>
+          </div>
+        </div>
 
-              <!-- Redes Sociales Directas -->
-              <div class="social-btn-row mt-2">
-                <a href="https://github.com/cristianmamani282-cloud" target="_blank" rel="noopener noreferrer" class="btn-social github" title="GitHub">
-                  <i class="bi bi-github"></i>
-                </a>
-                <a href="https://www.tiktok.com/@neil_san_14?_r=1&_t=ZS-9AyizTX0OX7" target="_blank" rel="noopener noreferrer" class="btn-social tiktok" title="TikTok">
-                  <i class="bi bi-tiktok"></i>
-                </a>
-                <a href="https://www.instagram.com/x_neil_mamani_x?rpxt=bDdkZWoxanZvdjFo" target="_blank" rel="noopener noreferrer" class="btn-social instagram" title="Instagram">
-                  <i class="bi bi-instagram"></i>
-                </a>
-                <a href="https://www.facebook.com/share/1E5eUvUtJ1/" target="_blank" rel="noopener noreferrer" class="btn-social facebook" title="Facebook">
-                  <i class="bi bi-facebook"></i>
-                </a>
+        <!-- Cuadrícula de 6 Botones de Acción (Grid 2x3 del Mockup) -->
+        <div class="actions-grid-wrap px-3 pt-1 pb-4">
+          <div class="row g-2">
+            <!-- 1. Mi Mundo -->
+            <div class="col-6">
+              <div class="action-card-tile" data-target-panel="mi-mundo" onclick="abrirPanel('mi-mundo')">
+                <i class="bi bi-controller action-card-icon"></i>
+                <span class="action-card-text">Mi Mundo</span>
               </div>
             </div>
+            <!-- 2. Fotos -->
+            <div class="col-6">
+              <div class="action-card-tile" data-target-panel="fotos" onclick="abrirPanel('fotos')">
+                <i class="bi bi-images action-card-icon"></i>
+                <span class="action-card-text">Fotos</span>
+              </div>
+            </div>
+            <!-- 3. Agenda -->
+            <div class="col-6">
+              <div class="action-card-tile" data-target-panel="agenda" onclick="abrirPanel('agenda')">
+                <i class="bi bi-calendar3 action-card-icon"></i>
+                <span class="action-card-text">Agenda</span>
+              </div>
+            </div>
+            <!-- 4. Música -->
+            <div class="col-6">
+              <div class="action-card-tile" data-target-panel="musica" onclick="abrirPanel('musica')">
+                <i class="bi bi-music-note-beamed action-card-icon"></i>
+                <span class="action-card-text">Música</span>
+              </div>
+            </div>
+            <!-- 5. Frases -->
+            <div class="col-6">
+              <div class="action-card-tile" data-target-panel="frases" onclick="abrirPanel('frases')">
+                <i class="bi bi-quote action-card-icon"></i>
+                <span class="action-card-text">Frases</span>
+              </div>
+            </div>
+            <!-- 6. Redes -->
+            <div class="col-6">
+              <div class="action-card-tile" data-target-panel="redes" onclick="abrirPanel('redes')">
+                <i class="bi bi-share-fill action-card-icon"></i>
+                <span class="action-card-text">Redes</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <!-- Columna Derecha: Biografía, Tags y Acción -->
-            <div class="col-md-7 text-start">
-              <div class="tags-group mb-3">
-                <span class="minimal-tag"><i class="bi bi-code-slash text-warning"></i> Desarrollo Web</span>
-                <span class="minimal-tag"><i class="bi bi-cpu-fill text-info"></i> Inteligencia Artificial</span>
-                <span class="minimal-tag"><i class="bi bi-fire text-danger"></i> PowerLifting</span>
-                <span class="minimal-tag"><i class="bi bi-controller text-success"></i> Gaming</span>
+      </section>
+
+
+      <!-- ====================================================================
+           B. PANEL 1: MI MUNDO (TECNOLOGÍAS, JUEGOS, ANIME Y PASATIEMPOS)
+           ==================================================================== -->
+      <section class="pwa-screen-panel" id="panel-mi-mundo">
+        <div class="panel-inner-content p-3">
+
+          <!-- Cabecera de Panel -->
+          <div class="panel-header-bar">
+            <button class="btn-panel-back" onclick="volverInicio()" title="Volver a Inicio">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="panel-title-group text-center">
+              <i class="bi bi-controller panel-header-icon"></i>
+              <h2 class="panel-heading">Mi Mundo</h2>
+              <small class="panel-subheading">Cosas que me apasionan e inspiran.</small>
+            </div>
+            <div style="width: 32px;"></div>
+          </div>
+
+          <!-- Botones Rápidos de Categorías (Cuadrícula 6 ítems con Delegación Event Bubbling) -->
+          <div class="category-grid-3x3 my-3">
+            <div class="category-box-item" data-subtab="tecnologias" onclick="cambiarSubTabMundo('tecnologias')">
+              <i class="bi bi-code-slash text-info"></i>
+              <span>Tecnologías</span>
+            </div>
+            <div class="category-box-item" data-subtab="juegos" onclick="cambiarSubTabMundo('juegos')">
+              <i class="bi bi-controller text-danger"></i>
+              <span>Videojuegos</span>
+            </div>
+            <div class="category-box-item" data-subtab="anime" onclick="cambiarSubTabMundo('anime')">
+              <i class="bi bi-fire text-warning"></i>
+              <span>Anime</span>
+            </div>
+            <div class="category-box-item" data-subtab="pasatiempos" onclick="cambiarSubTabMundo('pasatiempos')">
+              <i class="bi bi-lightning-charge text-success"></i>
+              <span>Pasatiempos</span>
+            </div>
+            <div class="category-box-item" data-panel="fotos" onclick="abrirPanel('fotos')">
+              <i class="bi bi-camera text-primary"></i>
+              <span>Fotografías</span>
+            </div>
+            <div class="category-box-item" data-panel="musica" onclick="abrirPanel('musica')">
+              <i class="bi bi-music-note-beamed text-purple"></i>
+              <span>Música</span>
+            </div>
+          </div>
+
+          <!-- Pestañas de Filtro (Tecnologías, Videojuegos, Anime, Pasatiempos) -->
+          <div class="pill-tabs-bar mb-3">
+            <button class="pill-tab-btn active" data-tab="tecnologias" onclick="cambiarSubTabMundo('tecnologias')">Tecnologías</button>
+            <button class="pill-tab-btn" data-tab="juegos" onclick="cambiarSubTabMundo('juegos')">Videojuegos</button>
+            <button class="pill-tab-btn" data-tab="anime" onclick="cambiarSubTabMundo('anime')">Anime</button>
+            <button class="pill-tab-btn" data-tab="pasatiempos" onclick="cambiarSubTabMundo('pasatiempos')">Pasatiempos</button>
+          </div>
+
+          <!-- 1. VISTA: TECNOLOGÍAS (LENGUAJES QUE USAMOS) -->
+          <div id="subtab-tecnologias" class="subtab-view active">
+            <h5 class="section-sub-title mb-2">💻 Lenguajes & Tecnologías</h5>
+            <div class="d-flex flex-column gap-2 mb-3">
+              <div class="tech-lang-card">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="tech-badge-icon html"><i class="bi bi-filetype-html"></i></span>
+                  <div>
+                    <h6 class="mb-0 fw-bold">HTML5 & PWA</h6>
+                    <small class="text-secondary">Estructuración semántica web moderna, Service Workers y capacidades Offline.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="tech-lang-card">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="tech-badge-icon css"><i class="bi bi-filetype-css"></i></span>
+                  <div>
+                    <h6 class="mb-0 fw-bold">CSS3 & Neón Synthwave</h6>
+                    <small class="text-secondary">Flexbox, CSS Grid, animaciones fluidas, efectos neón y diseño sin scrollbar.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="tech-lang-card">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="tech-badge-icon js"><i class="bi bi-filetype-js"></i></span>
+                  <div>
+                    <h6 class="mb-0 fw-bold">JavaScript (ES6+) & jQuery</h6>
+                    <small class="text-secondary">Manipulación reactiva del DOM, hidratación SSR, prevención de fugas y asincronía.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="tech-lang-card">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="tech-badge-icon php"><i class="bi bi-filetype-php"></i></span>
+                  <div>
+                    <h6 class="mb-0 fw-bold">PHP</h6>
+                    <small class="text-secondary">Lógica de servidor backend, procesamiento de peticiones y control de sesiones.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="tech-lang-card">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="tech-badge-icon python"><i class="bi bi-filetype-py"></i></span>
+                  <div>
+                    <h6 class="mb-0 fw-bold">Python</h6>
+                    <small class="text-secondary">Algoritmia, automatización de tareas y desarrollo de proyectos de Inteligencia Artificial.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="tech-lang-card">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="tech-badge-icon sql"><i class="bi bi-database-fill"></i></span>
+                  <div>
+                    <h6 class="mb-0 fw-bold">SQL (MySQL & PostgreSQL)</h6>
+                    <small class="text-secondary">Modelado de bases de datos relacionales, consultas complejas e integridad de datos.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="tech-lang-card">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="tech-badge-icon java"><i class="bi bi-file-code-fill"></i></span>
+                  <div>
+                    <h6 class="mb-0 fw-bold">C# & Java</h6>
+                    <small class="text-secondary">Programación Orientada a Objetos, estructuras de datos y software de escritorio.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. VISTA: VIDEOJUEGOS CON DESCRIPCIONES COMPLETAS -->
+          <div id="subtab-juegos" class="subtab-view">
+            <h5 class="section-sub-title mb-2">🎮 Juegos Favoritos & Mi Experiencia</h5>
+            <div class="d-flex flex-column gap-3 mb-3">
+              <!-- Minecraft -->
+              <div class="game-full-detail-card">
+                <div class="d-flex gap-3 align-items-start">
+                  <img src="juegos/minecraft.webp" alt="Minecraft" class="game-card-cover" />
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0 fw-bold text-light">Minecraft</h6>
+                      <span class="badge bg-success-subtle text-success small">Sandbox</span>
+                    </div>
+                    <small class="text-secondary d-block mt-1">Supervivencia infinita & Construcción</small>
+                    <p class="game-desc-body mt-2 mb-0">
+                      Lo juego desde niño y es uno de los juegos que más horas jugué en mi vida. Me apasiona construir y explorar mundos infinitos.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <p class="minimal-desc">
-                Bienvenido a mi aplicación web progresiva (PWA). Diseñada para ofrecer una experiencia rápida, fluida y con navegación offline completa en dispositivos móviles, tablets, laptops y computadoras de escritorio.
-              </p>
-
-              <div class="quote-mini-box mt-3 mb-3">
-                <i class="bi bi-quote text-warning fs-5"></i> <em>"Carpe Diem: Aprovecha el día, no confíes en el mañana."</em>
+              <!-- Grand Theft Auto (GTA V) -->
+              <div class="game-full-detail-card">
+                <div class="d-flex gap-3 align-items-start">
+                  <img src="juegos/gta.jpg" alt="GTA V" class="game-card-cover" />
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0 fw-bold text-light">Grand Theft Auto (GTA)</h6>
+                      <span class="badge bg-warning-subtle text-warning small">Acción & Mundo Abierto</span>
+                    </div>
+                    <small class="text-secondary d-block mt-1">Los Santos & Multijugador</small>
+                    <p class="game-desc-body mt-2 mb-0">
+                      Uno de mis juegos favoritos por el hecho de jugarlo con muchos amigos y poder conocer más amigos en ese juego a través de misiones en línea.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <button class="btn btn-action-orange w-100" onclick="mostrarSeccion('contacto')">
-                <i class="bi bi-send-fill me-1"></i> Contáctame Directamente
+              <!-- EA Sports FC -->
+              <div class="game-full-detail-card">
+                <div class="d-flex gap-3 align-items-start">
+                  <img src="juegos/fc.jpg" alt="EA Sports FC" class="game-card-cover" />
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0 fw-bold text-light">EA Sports FC</h6>
+                      <span class="badge bg-info-subtle text-info small">Deportes & Fútbol</span>
+                    </div>
+                    <small class="text-secondary d-block mt-1">Simulación Competitiva</small>
+                    <p class="game-desc-body mt-2 mb-0">
+                      Juego de fútbol que se volvió mi favorito porque lo jugamos mucho con mis familiares en línea o ya sea en consola compartiendo momentos competitivos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tekken 7 -->
+              <div class="game-full-detail-card">
+                <div class="d-flex gap-3 align-items-start">
+                  <img src="juegos/tekken7.jpg" alt="Tekken 7" class="game-card-cover" />
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0 fw-bold text-light">Tekken 7</h6>
+                      <span class="badge bg-danger-subtle text-danger small">Lucha & Arcade</span>
+                    </div>
+                    <small class="text-secondary d-block mt-1">Combate Marcial 3D</small>
+                    <p class="game-desc-body mt-2 mb-0">
+                      Uno de los juegos de pelea que más jugué desde las épocas del tilín con el mítico Tekken Tag Tournament y combates marciales intensos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- The Binding of Isaac: Rebirth -->
+              <div class="game-full-detail-card">
+                <div class="d-flex gap-3 align-items-start">
+                  <img src="juegos/the-binding-of-isaac-rebirth.jpg" alt="The Binding of Isaac" class="game-card-cover" />
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h6 class="mb-0 fw-bold text-light">The Binding of Isaac: Rebirth</h6>
+                      <span class="badge bg-danger-subtle text-danger small">Roguelike & Mazmorras</span>
+                    </div>
+                    <small class="text-secondary d-block mt-1">Sinergias & Desafío</small>
+                    <p class="game-desc-body mt-2 mb-0">
+                      Juego roguelike oscuro que me encanta por su dificultad implacable, desbloqueables infinitos y sinergias sorprendentes de objetos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. VISTA: ANIME (DRAGON BALL Z, DR STONE, ONE PUNCH MAN, RAGNAROK, ATAQUE A LOS TITANES) -->
+          <div id="subtab-anime" class="subtab-view">
+            <h5 class="section-sub-title mb-2">🔥 Animes Favoritos</h5>
+            <div class="d-flex flex-column gap-3 mb-3">
+              <!-- Dragon Ball Z -->
+              <div class="anime-detail-card">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-lightning-fill text-warning fs-5"></i>
+                  <h6 class="mb-0 fw-bold text-light">Dragon Ball Z</h6>
+                  <span class="badge bg-warning-subtle text-warning ms-auto small">Shonen Legendario</span>
+                </div>
+                <p class="anime-desc-text mb-0">
+                  La legendaria obra maestra de Akira Toriyama. Guerreros Z, batallas intergalácticas, transformaciones de Super Saiyajin y la eterna lección de romper límites y entrenar duro.
+                </p>
+              </div>
+
+              <!-- Dr. Stone -->
+              <div class="anime-detail-card">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-flask-fill text-success fs-5"></i>
+                  <h6 class="mb-0 fw-bold text-light">Dr. Stone</h6>
+                  <span class="badge bg-success-subtle text-success ms-auto small">Ciencia & Supervivencia</span>
+                </div>
+                <p class="anime-desc-text mb-0">
+                  Senku Ishigami despertando en un mundo petrificado tras miles de años. Utiliza la ciencia pura, la química y la ingeniería para reconstruir dos millones de años de civilización humana.
+                </p>
+              </div>
+
+              <!-- One Punch Man -->
+              <div class="anime-detail-card">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-hand-index-thumb-fill text-danger fs-5"></i>
+                  <h6 class="mb-0 fw-bold text-light">One Punch Man</h6>
+                  <span class="badge bg-danger-subtle text-danger ms-auto small">Acción & Fuerza Absoluta</span>
+                </div>
+                <p class="anime-desc-text mb-0">
+                  Saitama, un héroe ordinario que entrenó tan implacablemente que puede derrotar a cualquier enemigo colosal de un solo golpe. Combates espectaculares y una divertida búsqueda de emoción.
+                </p>
+              </div>
+
+              <!-- Record of Ragnarok -->
+              <div class="anime-detail-card">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-shield-shaded text-info fs-5"></i>
+                  <h6 class="mb-0 fw-bold text-light">Record of Ragnarok (Shuumatsu no Valkyrie)</h6>
+                  <span class="badge bg-info-subtle text-info ms-auto small">Torneo Divino</span>
+                </div>
+                <p class="anime-desc-text mb-0">
+                  El torneo definitivo donde 13 dioses supremos y 13 humanos legendarios (como Adán, Sasaki Kojiro y Buda) luchan en duelos a muerte por el destino y la supervivencia de la humanidad.
+                </p>
+              </div>
+
+              <!-- Ataque a los Titanes -->
+              <div class="anime-detail-card">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-swords text-secondary fs-5"></i>
+                  <h6 class="mb-0 fw-bold text-light">Ataque a los Titanes (Shingeki no Kyojin)</h6>
+                  <span class="badge bg-secondary-subtle text-light ms-auto small">Muros & Libertad</span>
+                </div>
+                <p class="anime-desc-text mb-0">
+                  Eren Jaeger y el Cuerpo de Exploración luchando por la libertad de la humanidad más allá de las murallas frente a la amenaza de los titanes y los secretos oscuros del mundo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. VISTA: PASATIEMPOS (EN VEZ DE DEPORTE) -->
+          <div id="subtab-pasatiempos" class="subtab-view">
+            <h5 class="section-sub-title mb-2">⚡ Mis Pasatiempos Principales</h5>
+            <div class="d-flex flex-column gap-2 mb-3">
+              <div class="category-detail-card">
+                <i class="bi bi-activity text-danger fs-3 me-3"></i>
+                <div>
+                  <h6 class="mb-1 fw-bold text-light">Entrenar en el GYM & PowerLifting</h6>
+                  <small class="text-secondary">El entrenamiento se volvió una parte fundamental de mi día a día. Es algo a lo que le agarré gusto, me despeja la mente y me relaja, siendo una vía de escape junto con la música.</small>
+                </div>
+              </div>
+              <div class="category-detail-card">
+                <i class="bi bi-controller text-info fs-3 me-3"></i>
+                <div>
+                  <h6 class="mb-1 fw-bold text-light">Jugar Videojuegos en Línea</h6>
+                  <small class="text-secondary">Me gusta jugar juegos en línea con amigos para poder distraerme y pasar el rato. Como ellos son de otros países, me ayuda a practicar inglés y divertirme en equipo.</small>
+                </div>
+              </div>
+              <div class="category-detail-card">
+                <i class="bi bi-headphones text-success fs-3 me-3"></i>
+                <div>
+                  <h6 class="mb-1 fw-bold text-light">Escuchar Música</h6>
+                  <small class="text-secondary">Mi pasatiempo más común para despejar la mente y poder relajarme en días pesados o complicados, acompañando cada momento de estudio y entrenamiento.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ====================================================================
+           C. PANEL 2: FOTOS (GALERÍA VERTICAL ÚNICAMENTE CON LAS FOTOS REALES)
+           ==================================================================== -->
+      <section class="pwa-screen-panel" id="panel-fotos">
+        <div class="panel-inner-content p-3">
+
+          <!-- Cabecera de Panel -->
+          <div class="panel-header-bar">
+            <button class="btn-panel-back" onclick="volverInicio()" title="Volver a Inicio">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="panel-title-group text-center">
+              <i class="bi bi-images panel-header-icon"></i>
+              <h2 class="panel-heading">Fotos</h2>
+              <small class="panel-subheading">Momentos que cuentan.</small>
+            </div>
+            <div style="width: 32px;"></div>
+          </div>
+
+          <!-- Tarjeta Carrusel de Fotos Reales -->
+          <div class="photo-showcase-card mt-3">
+            <div class="photo-display-frame">
+              <img id="carouselMainPhoto" src="img/perfil.jpeg" alt="Fotografía Real" class="photo-main-img" />
+              
+              <!-- Botones Flechas Laterales -->
+              <button class="photo-arrow-btn left" onclick="cambiarFotoSlider(-1)" aria-label="Foto anterior">
+                <i class="bi bi-chevron-left"></i>
               </button>
+              <button class="photo-arrow-btn right" onclick="cambiarFotoSlider(1)" aria-label="Siguiente foto">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+
+              <!-- Paginación de Puntos (5 Fotos Reales) -->
+              <div class="photo-dots-bar" id="photoDotsBar">
+                <span class="photo-dot active" onclick="irAFoto(0)"></span>
+                <span class="photo-dot" onclick="irAFoto(1)"></span>
+                <span class="photo-dot" onclick="irAFoto(2)"></span>
+                <span class="photo-dot" onclick="irAFoto(3)"></span>
+                <span class="photo-dot" onclick="irAFoto(4)"></span>
+              </div>
+            </div>
+
+            <!-- Pie de Foto Dinámico -->
+            <div class="photo-caption-box text-start px-3 py-2">
+              <h4 id="photoCaptionTitle" class="photo-caption-title mb-0">Mi Perfil Oficial</h4>
+              <p id="photoCaptionSub" class="photo-caption-sub mb-0">Fotografía de presentación de Cristian Neil Mamani.</p>
             </div>
           </div>
+
+          <!-- Mini Selector de Galería (Únicamente Fotos Reales Existentes) -->
+          <div class="d-flex justify-content-center gap-2 mt-3 overflow-auto py-1">
+            <img src="img/perfil.jpeg" alt="Perfil" class="thumb-mini-slide active" onclick="irAFoto(0)" title="Perfil" />
+            <img src="img/cup.jpeg" alt="Café" class="thumb-mini-slide" onclick="irAFoto(1)" title="Café & Enfoque" />
+            <img src="img/girl.jpeg" alt="Especial" class="thumb-mini-slide" onclick="irAFoto(2)" title="Momentos Especiales" />
+            <img src="img/travel.jpeg" alt="Viaje" class="thumb-mini-slide" onclick="irAFoto(3)" title="Viajes" />
+            <img src="img/tatto.jpeg" alt="Tatuaje" class="thumb-mini-slide" onclick="irAFoto(4)" title="Estilo & Arte" />
+          </div>
+
         </div>
       </section>
 
-      <!-- 2. SECCIÓN: PASATIEMPOS (2 COLUMNAS EN MÓVIL / 4 EN LAPTOP Y PC) -->
-      <section class="pwa-section-view" id="sec-pasatiempos">
-        <div class="minimal-card">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="card-section-heading mb-0"><i class="bi bi-controller text-warning me-2"></i>Mis Pasatiempos</h4>
-            <span class="badge bg-secondary">Tiempo Libre</span>
+
+      <!-- ====================================================================
+           D. PANEL 3: AGENDA (RUTINA, HORARIOS & PROGRESO)
+           ==================================================================== -->
+      <section class="pwa-screen-panel" id="panel-agenda">
+        <div class="panel-inner-content p-3">
+
+          <!-- Cabecera de Panel -->
+          <div class="panel-header-bar">
+            <button class="btn-panel-back" onclick="volverInicio()" title="Volver a Inicio">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="panel-title-group text-center">
+              <i class="bi bi-calendar3 panel-header-icon"></i>
+              <h2 class="panel-heading">Agenda</h2>
+              <small class="panel-subheading">Mi rutina, mi progreso.</small>
+            </div>
+            <div style="width: 32px;"></div>
           </div>
 
-          <div class="responsive-feature-grid">
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-joystick text-danger"></i></div>
-              <h6>Videojuegos en línea</h6>
-              <p>Jugar con amigos internacionales para divertirme y practicar inglés.</p>
-            </div>
-
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-headphones text-info"></i></div>
-              <h6>Escuchar Música</h6>
-              <p>Despejar la mente y relajarme durante entrenamientos o días pesados.</p>
-            </div>
-
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-book-half text-success"></i></div>
-              <h6>Leer Libros</h6>
-              <p>Lectura de libros de fantasía y autoayuda para desconectarme de la rutina.</p>
-            </div>
-
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-activity text-warning"></i></div>
-              <h6>Entrenar en el GYM</h6>
-              <p>Parte fundamental de mi rutina diaria, salud física y bienestar mental.</p>
-            </div>
+          <!-- Píldoras Horizontales de Días de la Semana con opción Todos -->
+          <div class="agenda-days-bar my-3">
+            <button class="agenda-day-pill" data-day="todos" onclick="filtrarDiaAgenda('todos')">Todos</button>
+            <button class="agenda-day-pill active" data-day="lun" onclick="filtrarDiaAgenda('lun')">Lun</button>
+            <button class="agenda-day-pill" data-day="mar" onclick="filtrarDiaAgenda('mar')">Mar</button>
+            <button class="agenda-day-pill" data-day="mie" onclick="filtrarDiaAgenda('mie')">Mié</button>
+            <button class="agenda-day-pill" data-day="jue" onclick="filtrarDiaAgenda('jue')">Jue</button>
+            <button class="agenda-day-pill" data-day="vie" onclick="filtrarDiaAgenda('vie')">Vie</button>
+            <button class="agenda-day-pill" data-day="sab" onclick="filtrarDiaAgenda('sab')">Sáb</button>
+            <button class="agenda-day-pill" data-day="dom" onclick="filtrarDiaAgenda('dom')">Dom</button>
           </div>
+
+          <!-- Cabecera de Estado del Listado -->
+          <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+            <span class="small fw-bold text-light" id="agendaDiaTitulo">
+              <i class="bi bi-calendar2-week text-danger me-1"></i> Rutina: Lunes
+            </span>
+            <span class="badge bg-dark border border-secondary text-secondary small" id="agendaCountBadge">3 actividades</span>
+          </div>
+
+          <!-- Contenedor en Modo Lista de Actividades -->
+          <div id="agendaTimelineList" class="agenda-list-container mb-3">
+            <!-- Se genera dinámicamente en formato de tarjetas de lista -->
+          </div>
+
+          <!-- Tarjeta Gráfica con Cita de la Agenda -->
+          <div class="agenda-quote-banner p-3 text-center">
+            <p class="mb-0 fs-6 fw-semibold text-light">
+              " Organización hoy,<br />libertad mañana. "
+            </p>
+          </div>
+
         </div>
       </section>
 
-      <!-- 3. SECCIÓN: INTERESES (2 COLUMNAS EN MÓVIL / 4 EN LAPTOP Y PC) -->
-      <section class="pwa-section-view" id="sec-intereses">
-        <div class="minimal-card">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="card-section-heading mb-0"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Áreas de Interés</h4>
-            <span class="badge bg-secondary">Formación</span>
+
+      <!-- ====================================================================
+           E. PANEL 4: MÚSICA (VIDEOS DE YOUTUBE EN FORMATO DE LISTA)
+           ==================================================================== -->
+      <section class="pwa-screen-panel" id="panel-musica">
+        <div class="panel-inner-content p-3">
+
+          <!-- Cabecera de Panel -->
+          <div class="panel-header-bar">
+            <button class="btn-panel-back" onclick="volverInicio()" title="Volver a Inicio">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="panel-title-group text-center">
+              <i class="bi bi-youtube panel-header-icon text-danger"></i>
+              <h2 class="panel-heading">Música Favorita</h2>
+              <small class="panel-subheading">Videos de YouTube & Playlists.</small>
+            </div>
+            <div style="width: 32px;"></div>
           </div>
 
-          <div class="responsive-feature-grid">
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-cpu-fill text-info"></i></div>
-              <h6>Programación con IA</h6>
-              <p>Desarrollo de sistemas aprovechando modelos de IA con revisión exhaustiva de código.</p>
+          <!-- Formato de Lista de Videos de YouTube y Spotify -->
+          <div class="youtube-music-list-wrap mt-3 d-flex flex-column gap-3 mb-4">
+            
+            <!-- 1. José Madero - Postales Desde el Fin Del Mundo -->
+            <div class="youtube-list-card">
+              <a href="https://www.youtube.com/watch?v=4TnoY0MBm48" target="_blank" rel="noopener noreferrer" class="youtube-card-link">
+                <div class="youtube-thumb-box">
+                  <img src="https://img.youtube.com/vi/4TnoY0MBm48/hqdefault.jpg" alt="José Madero" class="youtube-thumb-img" />
+                  <div class="youtube-play-btn"><i class="bi bi-play-fill"></i></div>
+                </div>
+                <div class="youtube-card-info flex-grow-1">
+                  <span class="badge bg-danger-subtle text-danger small mb-1"><i class="bi bi-youtube me-1"></i>YouTube</span>
+                  <h6 class="mb-0 fw-bold text-light">Postales Desde el Fin Del Mundo</h6>
+                  <small class="text-secondary">José Madero</small>
+                </div>
+                <i class="bi bi-box-arrow-up-right text-secondary small me-2"></i>
+              </a>
             </div>
 
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-translate text-success"></i></div>
-              <h6>Aprender Inglés</h6>
-              <p>Estudio de idioma para oportunidades globales y comunicación internacional.</p>
+            <!-- 2. DUKI, Myke Towers - Nueva Era -->
+            <div class="youtube-list-card">
+              <a href="https://www.youtube.com/watch?v=wgvqiH7iCRo" target="_blank" rel="noopener noreferrer" class="youtube-card-link">
+                <div class="youtube-thumb-box">
+                  <img src="https://img.youtube.com/vi/wgvqiH7iCRo/hqdefault.jpg" alt="DUKI, Myke Towers" class="youtube-thumb-img" />
+                  <div class="youtube-play-btn"><i class="bi bi-play-fill"></i></div>
+                </div>
+                <div class="youtube-card-info flex-grow-1">
+                  <span class="badge bg-danger-subtle text-danger small mb-1"><i class="bi bi-youtube me-1"></i>YouTube</span>
+                  <h6 class="mb-0 fw-bold text-light">Nueva Era</h6>
+                  <small class="text-secondary">DUKI, Myke Towers</small>
+                </div>
+                <i class="bi bi-box-arrow-up-right text-secondary small me-2"></i>
+              </a>
             </div>
 
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-tools text-primary"></i></div>
-              <h6>Mantenimiento PC</h6>
-              <p>Mantenimiento preventivo y correctivo de hardware y software desde pequeño.</p>
+            <!-- 3. Imagine Dragons - Monster -->
+            <div class="youtube-list-card">
+              <a href="https://www.youtube.com/watch?v=SWdJdGYfYPw" target="_blank" rel="noopener noreferrer" class="youtube-card-link">
+                <div class="youtube-thumb-box">
+                  <img src="https://img.youtube.com/vi/SWdJdGYfYPw/hqdefault.jpg" alt="Imagine Dragons" class="youtube-thumb-img" />
+                  <div class="youtube-play-btn"><i class="bi bi-play-fill"></i></div>
+                </div>
+                <div class="youtube-card-info flex-grow-1">
+                  <span class="badge bg-danger-subtle text-danger small mb-1"><i class="bi bi-youtube me-1"></i>YouTube</span>
+                  <h6 class="mb-0 fw-bold text-light">Monster</h6>
+                  <small class="text-secondary">Imagine Dragons</small>
+                </div>
+                <i class="bi bi-box-arrow-up-right text-secondary small me-2"></i>
+              </a>
             </div>
 
-            <div class="mini-feature-box">
-              <div class="feature-icon"><i class="bi bi-fire text-danger"></i></div>
-              <h6>PowerLifting</h6>
-              <p>Entrenamiento de fuerza competitiva para preparación en torneos deportivos.</p>
+            <!-- 4. Mr.Kitty - After Dark -->
+            <div class="youtube-list-card">
+              <a href="https://www.youtube.com/watch?v=waAlgFq9Xq8" target="_blank" rel="noopener noreferrer" class="youtube-card-link">
+                <div class="youtube-thumb-box">
+                  <img src="https://img.youtube.com/vi/waAlgFq9Xq8/hqdefault.jpg" alt="After Dark" class="youtube-thumb-img" />
+                  <div class="youtube-play-btn"><i class="bi bi-play-fill"></i></div>
+                </div>
+                <div class="youtube-card-info flex-grow-1">
+                  <span class="badge bg-danger-subtle text-danger small mb-1"><i class="bi bi-youtube me-1"></i>YouTube</span>
+                  <h6 class="mb-0 fw-bold text-light">After Dark (Synthwave)</h6>
+                  <small class="text-secondary">Mr.Kitty</small>
+                </div>
+                <i class="bi bi-box-arrow-up-right text-secondary small me-2"></i>
+              </a>
             </div>
+
+            <!-- 5. Mi Playlist Spotify Oficial -->
+            <div class="youtube-list-card spotify-border">
+              <a href="https://open.spotify.com/playlist/5pnAScR27L9Y1GuGvEzur8?si=gIIr9ti5TF6X7F1DX4wXkQ&utm_source=whatsapp&pi=qFkyOfgKT_yrt" target="_blank" rel="noopener noreferrer" class="youtube-card-link">
+                <div class="youtube-thumb-box">
+                  <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80" alt="Spotify" class="youtube-thumb-img" />
+                  <div class="youtube-play-btn spotify-green"><i class="bi bi-spotify"></i></div>
+                </div>
+                <div class="youtube-card-info flex-grow-1">
+                  <span class="badge bg-success-subtle text-success small mb-1"><i class="bi bi-spotify me-1"></i>Spotify Playlist</span>
+                  <h6 class="mb-0 fw-bold text-light">Mi Playlist Oficial</h6>
+                  <small class="text-secondary">Para entrenar y concentrarse</small>
+                </div>
+                <i class="bi bi-box-arrow-up-right text-success small me-2"></i>
+              </a>
+            </div>
+
           </div>
+
         </div>
       </section>
 
-      <!-- 4. SECCIÓN: HORARIO -->
-      <section class="pwa-section-view" id="sec-horario">
-        <div class="minimal-card">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="card-section-heading mb-0"><i class="bi bi-clock-history text-warning me-2"></i>Horario Semanal</h4>
-            <span class="badge" style="background:#f97316; color:#fff;">Organización</span>
+
+      <!-- ====================================================================
+           F. PANEL 5: FRASES (IMÁGENES DE FRASES: CARPEDIEM, DESCARGA, IMAGES)
+           ==================================================================== -->
+      <section class="pwa-screen-panel" id="panel-frases">
+        <div class="panel-inner-content p-3">
+
+          <!-- Cabecera de Panel -->
+          <div class="panel-header-bar">
+            <button class="btn-panel-back" onclick="volverInicio()" title="Volver a Inicio">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="panel-title-group text-center">
+              <i class="bi bi-quote panel-header-icon"></i>
+              <h2 class="panel-heading">Frases</h2>
+              <small class="panel-subheading">Imágenes que inspiran mi camino.</small>
+            </div>
+            <div style="width: 32px;"></div>
           </div>
 
-          <div class="btn-group w-100 mb-3" role="group">
-            <button type="button" class="btn btn-schedule-pill active" onclick="mostrarHorario('semana')">Lun - Vie</button>
-            <button type="button" class="btn btn-schedule-pill" onclick="mostrarHorario('sabado')">Sábado</button>
-            <button type="button" class="btn btn-schedule-pill" onclick="mostrarHorario('domingo')">Domingo</button>
-          </div>
+          <!-- Visor Principal de Imágenes de Frases -->
+          <div class="phrase-showcase-card mt-3">
+            <div class="phrase-img-viewport">
+              <img id="phraseMainImg" src="img/carpediem.jpg" alt="Imagen de Frase" class="phrase-main-image" />
+              
+              <!-- Flechas de Navegación -->
+              <button class="phrase-arrow-btn left" onclick="cambiarFraseImgSlider(-1)" aria-label="Anterior frase">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <button class="phrase-arrow-btn right" onclick="cambiarFraseImgSlider(1)" aria-label="Siguiente frase">
+                <i class="bi bi-chevron-right"></i>
+              </button>
 
-          <div class="timeline-compact-list" id="horario-semana">
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-alarm"></i> Mañana - 12:00 PM</span>
-              <p class="time-text">Clases presenciales en la universidad (UPDS).</p>
+              <!-- Puntos de Navegación (3 Imágenes) -->
+              <div class="phrase-dots-bar" id="phraseDotsBar">
+                <span class="phrase-dot active" onclick="irAFraseImg(0)"></span>
+                <span class="phrase-dot" onclick="irAFraseImg(1)"></span>
+                <span class="phrase-dot" onclick="irAFraseImg(2)"></span>
+              </div>
             </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-egg-fried"></i> 12:00 PM - 03:00 PM</span>
-              <p class="time-text">Entrenamiento físico en el GYM y almuerzo nutritivo.</p>
-            </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-translate"></i> 03:00 PM - 05:00 PM</span>
-              <p class="time-text">Clases de inglés para perfeccionar el idioma.</p>
-            </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-briefcase"></i> 05:00 PM - 10:00 PM</span>
-              <p class="time-text">Jornada laboral en el trabajo.</p>
-            </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-moon-stars"></i> 10:00 PM en adelante</span>
-              <p class="time-text">Cena, videojuegos con amigos y descanso reparador.</p>
-            </div>
-          </div>
 
-          <div class="timeline-compact-list d-none" id="horario-sabado">
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-alarm"></i> Mañana</span>
-              <p class="time-text">Entrenamiento matutino y preparación del día.</p>
-            </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-journal-code"></i> Tarde</span>
-              <p class="time-text">Estudio, resolución de tareas universitarias y código.</p>
-            </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-controller"></i> Noche</span>
-              <p class="time-text">Repaso académico, juegos y descanso personal.</p>
+            <!-- Pie de Imagen de la Frase -->
+            <div class="phrase-caption-box p-3 text-start">
+              <h5 id="phraseCaptionTitle" class="mb-1 fw-bold text-light">Carpe Diem</h5>
+              <p id="phraseCaptionDesc" class="small text-secondary mb-0">Aprovecha el día presente con determinación y disciplina.</p>
             </div>
           </div>
 
-          <div class="timeline-compact-list d-none" id="horario-domingo">
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-sun"></i> Mañana & Mediodía</span>
-              <p class="time-text">Despertar con calma y almuerzo familiar.</p>
-            </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-tree"></i> Tarde</span>
-              <p class="time-text">Salidas de ocio, caminatas o actividades recreativas.</p>
-            </div>
-            <div class="timeline-row">
-              <span class="time-badge"><i class="bi bi-battery-charging"></i> Noche</span>
-              <p class="time-text">Descanso temprano para iniciar con energía la semana.</p>
-            </div>
+          <!-- Mini Selector de las 3 Imágenes de Frases -->
+          <div class="d-flex justify-content-center gap-2 mt-3 overflow-auto py-1">
+            <img src="img/carpediem.jpg" alt="Carpe Diem" class="phrase-mini-thumb active" onclick="irAFraseImg(0)" title="Carpe Diem" />
+            <img src="img/descarga.jpg" alt="Frase 2" class="phrase-mini-thumb" onclick="irAFraseImg(1)" title="Determinación" />
+            <img src="img/images.jpg" alt="Frase 3" class="phrase-mini-thumb" onclick="irAFraseImg(2)" title="Superación" />
           </div>
+
+          <!-- Cita Destacada Adicional -->
+          <div class="quote-text-banner-neon mt-3 p-3 text-center">
+            <p class="mb-0 fs-6 text-light fw-bold fst-italic">
+              "La disciplina supera a la motivación."
+            </p>
+            <small class="text-secondary">— Filosofía de vida</small>
+          </div>
+
         </div>
       </section>
 
-      <!-- 5. SECCIÓN: VIDEOJUEGOS (RESPONSIVO EN GRID) -->
-      <section class="pwa-section-view" id="sec-juegos">
-        <div class="minimal-card">
-          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-            <h4 class="card-section-heading mb-0"><i class="bi bi-joystick text-warning me-2"></i>Juegos Favoritos</h4>
-            <!-- Filtro de Juegos -->
-            <div class="games-filter-scroll-bar">
-              <button class="btn btn-filter-bubble active" data-filter="todos" onclick="filtrar('todos')">Todos</button>
-              <button class="btn btn-filter-bubble" data-filter="sandbox" onclick="filtrar('sandbox')">Minecraft</button>
-              <button class="btn btn-filter-bubble" data-filter="accion" onclick="filtrar('accion')">GTA</button>
-              <button class="btn btn-filter-bubble" data-filter="deportes" onclick="filtrar('deportes')">EA FC</button>
-              <button class="btn btn-filter-bubble" data-filter="lucha" onclick="filtrar('lucha')">Tekken 7</button>
-              <button class="btn btn-filter-bubble" data-filter="roguelike" onclick="filtrar('roguelike')">Isaac</button>
+
+      <!-- ====================================================================
+           G. PANEL 6: REDES (SOCIALES & FORMULARIO DE CONTACTO)
+           ==================================================================== -->
+      <section class="pwa-screen-panel" id="panel-redes">
+        <div class="panel-inner-content p-3">
+
+          <!-- Cabecera de Panel -->
+          <div class="panel-header-bar">
+            <button class="btn-panel-back" onclick="volverInicio()" title="Volver a Inicio">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="panel-title-group text-center">
+              <i class="bi bi-share-fill panel-header-icon"></i>
+              <h2 class="panel-heading">Redes</h2>
+              <small class="panel-subheading">Conecta conmigo.</small>
+            </div>
+            <div style="width: 32px;"></div>
+          </div>
+
+          <!-- Cuadrícula 3x2 de Botones Sociales Neón -->
+          <div class="social-grid-3x2 my-3">
+            <div class="row g-2">
+              <!-- Instagram -->
+              <div class="col-4">
+                <a href="https://www.instagram.com/x_neil_mamani_x?rpxt=bDdkZWoxanZvdjFo" target="_blank" rel="noopener noreferrer" class="btn-social-block insta">
+                  <i class="bi bi-instagram fs-4"></i>
+                  <span>Instagram</span>
+                </a>
+              </div>
+              <!-- TikTok -->
+              <div class="col-4">
+                <a href="https://www.tiktok.com/@neil_san_14?_r=1&_t=ZS-9AyizTX0OX7" target="_blank" rel="noopener noreferrer" class="btn-social-block tiktok">
+                  <i class="bi bi-tiktok fs-4"></i>
+                  <span>TikTok</span>
+                </a>
+              </div>
+              <!-- YouTube -->
+              <div class="col-4">
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="btn-social-block youtube">
+                  <i class="bi bi-youtube fs-4"></i>
+                  <span>YouTube</span>
+                </a>
+              </div>
+              <!-- Discord -->
+              <div class="col-4">
+                <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="btn-social-block discord">
+                  <i class="bi bi-discord fs-4"></i>
+                  <span>Discord</span>
+                </a>
+              </div>
+              <!-- GitHub -->
+              <div class="col-4">
+                <a href="https://github.com/cristianmamani282-cloud" target="_blank" rel="noopener noreferrer" class="btn-social-block github">
+                  <i class="bi bi-github fs-4"></i>
+                  <span>GitHub</span>
+                </a>
+              </div>
+              <!-- Spotify -->
+              <div class="col-4">
+                <a href="https://open.spotify.com/playlist/5pnAScR27L9Y1GuGvEzur8?si=gIIr9ti5TF6X7F1DX4wXkQ&utm_source=whatsapp&pi=qFkyOfgKT_yrt" target="_blank" rel="noopener noreferrer" class="btn-social-block spotify">
+                  <i class="bi bi-spotify fs-4"></i>
+                  <span>Spotify</span>
+                </a>
+              </div>
             </div>
           </div>
 
-          <div class="responsive-games-grid">
-            <div class="game-row-box game-row" data-categoria="sandbox">
-              <img src="juegos/minecraft.webp" alt="Minecraft" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
-              <div class="game-meta">
-                <h6>Minecraft</h6>
-                <small>Sandbox & Supervivencia • Horas de diversión</small>
-              </div>
-            </div>
-
-            <div class="game-row-box game-row" data-categoria="accion">
-              <img src="juegos/gta.jpg" alt="GTA" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
-              <div class="game-meta">
-                <h6>Grand Theft Auto (GTA)</h6>
-                <small>Mundo Abierto & Acción • Multijugador online</small>
-              </div>
-            </div>
-
-            <div class="game-row-box game-row" data-categoria="deportes">
-              <img src="juegos/fc.jpg" alt="EA FC" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
-              <div class="game-meta">
-                <h6>EA Sports FC</h6>
-                <small>Deportes & Fútbol • Con familiares y amigos</small>
-              </div>
-            </div>
-
-            <div class="game-row-box game-row" data-categoria="lucha">
-              <img src="juegos/tekken7.jpg" alt="Tekken 7" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
-              <div class="game-meta">
-                <h6>Tekken 7</h6>
-                <small>Lucha & Arcade • Desde el mítico Tekken Tag</small>
-              </div>
-            </div>
-
-            <div class="game-row-box game-row" data-categoria="roguelike">
-              <img src="juegos/the-binding-of-isaac-rebirth.jpg" alt="Isaac" class="game-thumb" width="48" height="48" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;" />
-              <div class="game-meta">
-                <h6>The Binding of Isaac: Rebirth</h6>
-                <small>Roguelike & Aventura • Cada partida es única</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6. SECCIÓN: MÚSICA (RESPONSIVA EN GRID) -->
-      <section class="pwa-section-view" id="sec-musica">
-        <div class="minimal-card">
-          <h4 class="card-section-heading mb-3"><i class="bi bi-music-note-beamed text-warning me-2"></i>Música Favorita</h4>
-
-          <div class="responsive-music-grid">
-            <a href="https://www.youtube.com/watch?v=4TnoY0MBm48" target="_blank" rel="noopener noreferrer" class="music-link-card">
-              <div class="music-icon-wrap"><i class="bi bi-youtube text-danger"></i></div>
-              <div class="music-info">
-                <strong>José Madero</strong>
-                <small>Postales Desde el Fin Del Mundo</small>
-              </div>
-              <i class="bi bi-box-arrow-up-right ms-auto text-muted"></i>
-            </a>
-
-            <a href="https://www.youtube.com/watch?v=wgvqiH7iCRo" target="_blank" rel="noopener noreferrer" class="music-link-card">
-              <div class="music-icon-wrap"><i class="bi bi-youtube text-danger"></i></div>
-              <div class="music-info">
-                <strong>DUKI, Myke Towers</strong>
-                <small>Nueva Era</small>
-              </div>
-              <i class="bi bi-box-arrow-up-right ms-auto text-muted"></i>
-            </a>
-
-            <a href="https://www.youtube.com/watch?v=SWdJdGYfYPw" target="_blank" rel="noopener noreferrer" class="music-link-card">
-              <div class="music-icon-wrap"><i class="bi bi-youtube text-danger"></i></div>
-              <div class="music-info">
-                <strong>Imagine Dragons</strong>
-                <small>Monster</small>
-              </div>
-              <i class="bi bi-box-arrow-up-right ms-auto text-muted"></i>
-            </a>
-
-            <a href="https://open.spotify.com/playlist/5pnAScR27L9Y1GuGvEzur8?si=gIIr9ti5TF6X7F1DX4wXkQ&utm_source=whatsapp&pi=qFkyOfgKT_yrt" target="_blank" rel="noopener noreferrer" class="music-link-card spotify-border">
-              <div class="music-icon-wrap"><i class="bi bi-spotify text-success"></i></div>
-              <div class="music-info">
-                <strong>Mi Playlist de Spotify</strong>
-                <small>Entrenamiento & Rock / Pop</small>
-              </div>
-              <i class="bi bi-box-arrow-up-right ms-auto text-success"></i>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- 7. SECCIÓN: FRASES (RESPONSIVA) -->
-      <section class="pwa-section-view" id="sec-frases">
-        <div class="minimal-card text-center">
-          <h4 class="card-section-heading mb-3"><i class="bi bi-chat-quote-fill text-warning me-2"></i>Frases Inspiradoras</h4>
-
-          <div class="row g-3 justify-content-center">
-            <div class="col-6 col-md-4">
-              <div class="quote-image-box">
-                <img src="img/carpediem.jpg" alt="Carpe Diem" class="img-fluid rounded" style="max-height: 160px; object-fit: cover; width: 100%; border: 1px solid rgba(249, 115, 22, 0.3);" />
-              </div>
-            </div>
-            <div class="col-6 col-md-4">
-              <div class="quote-image-box">
-                <img src="img/descarga.jpg" alt="Frase 2" class="img-fluid rounded" style="max-height: 160px; object-fit: cover; width: 100%; border: 1px solid rgba(249, 115, 22, 0.3);" />
-              </div>
-            </div>
-            <div class="col-12 col-md-4">
-              <div class="quote-image-box">
-                <img src="img/images.jpg" alt="Frase 3" class="img-fluid rounded" style="max-height: 160px; object-fit: cover; width: 100%; border: 1px solid rgba(249, 115, 22, 0.3);" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 8. SECCIÓN: FILTRO DE 3 CAPAS (CÓDIGO OFICIAL GUÍA INGE MIGUEL) -->
-      <section class="pwa-section-view" id="sec-filtros">
-        <div class="minimal-card">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="card-section-heading mb-0"><i class="bi bi-funnel-fill text-warning me-2"></i>Filtro Dinámico de 3 Capas</h4>
-            <span class="badge" style="background:#f97316; color:#fff;">Guía Oficial</span>
-          </div>
-          <p class="small text-muted mb-3">Filtro en cascada requerido por el docente (UPDS).</p>
-
-          <div class="row g-3 mb-3">
-            <div class="col-md-6 text-start">
-              <label for="capa1" class="form-label small fw-semibold">Capa 1: Área de Estudio</label>
-              <select id="capa1" class="form-select custom-select-orange">
-                <option value="">-- Elija Área --</option>
-                <option value="academico">Académico (UPDS)</option>
-                <option value="desarrollo">Desarrollo Software</option>
-              </select>
-            </div>
-
-            <div class="col-md-6 text-start">
-              <label for="capa2" class="form-label small fw-semibold">Capa 2: Especialidad / Materia</label>
-              <select id="capa2" class="form-select custom-select-orange" disabled>
-                <option value="">-- Primero elija área --</option>
-              </select>
-            </div>
+          <!-- Banner Cita Redes -->
+          <div class="social-quote-banner p-3 text-center mb-3">
+            <p class="mb-0 fs-6 text-light fst-italic">
+              "Buenas personas,<br />grandes historias."
+            </p>
           </div>
 
-          <div class="text-start">
-            <label class="form-label small text-muted fw-semibold">Capa 3: Resultado del Filtro</label>
-            <div id="resultadoFiltro" class="item-card">Seleccione las capas anteriores...</div>
-          </div>
-        </div>
-      </section>
+          <!-- Formulario de Contacto -->
+          <div class="contact-form-glass-card p-3 mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-envelope-check-fill text-danger"></i>
+                <h6 class="mb-0 fw-bold">Enviar Mensaje Directo</h6>
+              </div>
+              <span id="estadoRedContacto" class="badge-estado-red">🟢 En Línea</span>
+            </div>
+            <p class="small text-secondary mb-3">Validación en tiempo real, cola de sincronización y soporte Offline-First:</p>
 
-      <!-- 9. SECCIÓN: CONTACTO (CÓDIGO OFICIAL GUÍA + SOPORTE OFFLINE PWA) -->
-      <section class="pwa-section-view" id="sec-contacto">
-        <div class="minimal-card text-start">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="card-section-heading mb-0"><i class="bi bi-envelope-fill text-warning me-2"></i>Contáctame</h4>
-            <span class="badge bg-success"><i class="bi bi-wifi-off"></i> PWA Offline</span>
-          </div>
-
-          <form id="pwaForm" novalidate>
-            <div class="row g-2 mb-2">
-              <div class="col-md-6">
-                <label for="nombre" class="form-label small fw-semibold">Nombre Completo <span class="text-danger">*</span></label>
-                <input type="text" class="form-control custom-input" id="nombre" placeholder="Ingresa tu nombre" autocomplete="off" />
+            <form id="pwaForm" novalidate>
+              <div class="mb-2 text-start">
+                <label for="nombre" class="form-label small text-secondary">Nombre Completo <span class="text-danger">*</span></label>
+                <input type="text" class="form-control custom-input-neon" id="nombre" placeholder="Ingresa tu nombre" autocomplete="off" />
                 <div id="errNombre" class="msg-field-error">⚠️ Esta casilla es obligatoria (solo letras).</div>
               </div>
 
-              <div class="col-md-6">
-                <label for="correo" class="form-label small fw-semibold">Correo Electrónico <span class="text-danger">*</span></label>
-                <input type="email" class="form-control custom-input" id="correo" placeholder="correo@ejemplo.com" autocomplete="off" />
+              <div class="mb-2 text-start">
+                <label for="correo" class="form-label small text-secondary">Correo Electrónico <span class="text-danger">*</span></label>
+                <input type="email" class="form-control custom-input-neon" id="correo" placeholder="correo@ejemplo.com" autocomplete="off" />
                 <div id="errCorreo" class="msg-field-error">⚠️ Ingresa un correo electrónico válido.</div>
               </div>
-            </div>
 
-            <div class="mb-2">
-              <label for="telefono" class="form-label small fw-semibold">Número de Teléfono</label>
-              <div class="input-group">
-                <select id="codigoPais" class="form-select custom-select-orange" style="max-width: 105px;">
-                  <option value="+591" selected>🇧🇴 +591</option>
-                  <option value="+54">🇦🇷 +54</option>
-                  <option value="+51">🇵🇪 +51</option>
-                  <option value="+56">🇨🇱 +56</option>
-                  <option value="+1">🇺🇸 +1</option>
-                </select>
-                <input type="text" class="form-control custom-input" id="telefono" placeholder="Número celular" autocomplete="off" />
+              <div class="mb-2 text-start">
+                <label for="telefono" class="form-label small text-secondary">Número Celular</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-dark border-secondary text-light small">+591</span>
+                  <input type="text" class="form-control custom-input-neon" id="telefono" placeholder="Número celular" autocomplete="off" />
+                </div>
               </div>
+
+              <div class="mb-3 text-start">
+                <label for="mensaje" class="form-label small text-secondary">Mensaje</label>
+                <textarea class="form-control custom-input-neon" id="mensaje" rows="2" placeholder="Escribe tu mensaje..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-neon-send w-100">
+                <i class="bi bi-send-fill me-1"></i> Enviar Mensaje
+              </button>
+            </form>
+
+            <div id="successAlert" class="msg-exito mt-2" style="display: none;">
+              ✅ ¡Mensaje enviado con éxito!
             </div>
-
-            <div class="mb-3">
-              <label for="mensaje" class="form-label small fw-semibold">Mensaje</label>
-              <textarea class="form-control custom-input" id="mensaje" rows="3" placeholder="Escribe tu mensaje..."></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-action-orange w-100">
-              <i class="bi bi-send-fill me-1"></i> Enviar Mensaje
-            </button>
-          </form>
-
-          <div id="successAlert" class="msg-exito mt-3" style="display: none;">
-            ✅ ¡Formulario enviado con éxito! Gracias por tu mensaje.
           </div>
+
         </div>
       </section>
 
-    </main>
+    </main><!-- /.pwa-main-viewport -->
 
-  </div>
 
-  <!-- PWA TOAST DE CONEXIÓN (ONLINE / OFFLINE) -->
+    <!-- ====================================================================
+         3. DOCK INFERIOR FIJO (BOTTOM NAVIGATION DOCK - 5 ICONOS)
+         ==================================================================== -->
+    <nav class="phone-bottom-dock">
+      <button class="dock-btn-tab active" data-target="panel-principal" onclick="abrirPanel('principal')" title="Inicio">
+        <i class="bi bi-house-door-fill"></i>
+      </button>
+      <button class="dock-btn-tab" data-target="panel-mi-mundo" onclick="abrirPanel('mi-mundo')" title="Mi Mundo">
+        <i class="bi bi-controller"></i>
+      </button>
+      <button class="dock-btn-tab" data-target="panel-fotos" onclick="abrirPanel('fotos')" title="Fotos">
+        <i class="bi bi-images"></i>
+      </button>
+      <button class="dock-btn-tab" data-target="panel-agenda" onclick="abrirPanel('agenda')" title="Agenda">
+        <i class="bi bi-calendar3"></i>
+      </button>
+      <button class="dock-btn-tab" data-target="panel-redes" onclick="abrirPanel('redes')" title="Redes & Contacto">
+        <i class="bi bi-person-fill"></i>
+      </button>
+    </nav>
+
+  </div><!-- /.pwa-app-wrapper -->
+
+
+  <!-- TOAST NOTIFICACIÓN PWA (ONLINE/OFFLINE/HIDRATACIÓN) -->
   <div id="pwaToast" class="pwa-toast" role="alert" aria-live="assertive">
     <i class="bi bi-info-circle-fill" id="pwaToastIcon"></i>
     <span id="pwaToastMsg"></span>
   </div>
 
-  <!-- PWA BANNER FLOTANTE DE INSTALACIÓN -->
+  <!-- BANNER PWA DE INSTALACIÓN -->
   <div id="pwaBanner" class="pwa-banner d-none">
     <div class="pwa-banner-header">
-      <img src="icons/icon-96.png" alt="Icono" class="pwa-banner-icon" width="38" height="38" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover;" />
+      <img src="icons/icon-96.png" alt="Icono" class="pwa-banner-icon" width="36" height="36" />
       <div class="pwa-banner-info">
-        <h5 class="pwa-banner-title">Instalar Presentación</h5>
+        <h5 class="pwa-banner-title">Instalar Presentación PWA</h5>
         <p class="pwa-banner-desc">Acceso rápido y funcionamiento sin conexión</p>
       </div>
       <button id="pwaBannerCloseBtn" class="pwa-banner-close" aria-label="Cerrar">&times;</button>
     </div>
     <div class="pwa-banner-actions">
       <button id="pwaBannerDismissBtn" class="btn btn-outline-secondary btn-sm text-light">Más tarde</button>
-      <button id="pwaBannerInstallBtn" class="btn btn-action-orange btn-sm py-1">
+      <button id="pwaBannerInstallBtn" class="btn btn-neon-send btn-sm py-1">
         <i class="bi bi-download me-1"></i> Instalar
       </button>
-    </div>
-  </div>
-
-  <!-- MODAL DE AYUDA PARA IPHONE / SAFARI -->
-  <div class="modal fade" id="pwaIosModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-start" style="background: #13101d; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 16px; color: #f3f4f6;">
-        <div class="modal-header border-secondary">
-          <h5 class="modal-title">
-            <i class="bi bi-apple me-2 text-warning"></i>Instalar en iPhone o iPad
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <ol class="ps-3 mb-3" style="line-height: 1.8;">
-            <li>Pulsa el botón <strong>Compartir</strong> <i class="bi bi-box-arrow-up text-primary"></i> en Safari.</li>
-            <li>Selecciona <strong>"Agregar a pantalla de inicio"</strong> <i class="bi bi-plus-square text-success"></i>.</li>
-            <li>Confirma pulsando <strong>"Agregar"</strong>.</li>
-          </ol>
-        </div>
-      </div>
     </div>
   </div>
 

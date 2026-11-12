@@ -1,5 +1,5 @@
 {
-  "id": "./?source=pwa",
+  "id": "cristian-neil-pwa",
   "name": "Cristian Neil - Portafolio PWA Oficial",
   "short_name": "Cristian Neil",
   "description": "Portafolio y presentación personal PWA de Cristian Neil Mamani (UPDS Sede La Paz).",
@@ -12,8 +12,8 @@
     "minimal-ui"
   ],
   "orientation": "any",
-  "background_color": "#0f172a",
-  "theme_color": "#f97316",
+  "background_color": "#06040a",
+  "theme_color": "#0d0a17",
   "lang": "es-BO",
   "dir": "ltr",
   "categories": [
@@ -79,24 +79,31 @@
   ],
   "shortcuts": [
     {
-      "name": "Pasatiempos",
-      "short_name": "Pasatiempos",
-      "description": "Ver pasatiempos",
-      "url": "./index.html#pasatiempos",
+      "name": "Mi Mundo",
+      "short_name": "Mi Mundo",
+      "description": "Tecnologías, Videojuegos y Anime",
+      "url": "./index.html#mi-mundo",
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Filtro 3 Capas",
-      "short_name": "Filtro",
-      "description": "Filtro dinámico de 3 capas UPDS",
-      "url": "./index.html#filtros",
+      "name": "Fotos",
+      "short_name": "Fotos",
+      "description": "Galería de fotografías reales",
+      "url": "./index.html#fotos",
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Contacto",
+      "name": "Música Favorita",
+      "short_name": "Música",
+      "description": "Videos de YouTube y playlists",
+      "url": "./index.html#musica",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Redes y Contacto",
       "short_name": "Contacto",
-      "description": "Enviar formulario de contacto",
-      "url": "./index.html#contacto",
+      "description": "Conectar en redes y enviar mensaje",
+      "url": "./index.html#redes",
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
     }
   ]

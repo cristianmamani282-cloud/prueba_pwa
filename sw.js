@@ -1,9 +1,9 @@
 /**
  * Service Worker Oficial para la PWA de Cristian Neil (UPDS)
- * Version: 3.2.0
+ * Version: 7.0.0 - Modo Offline, Cache-First & Fallback Navigation
  */
 
-const CACHE_NAME = 'cristian-neil-pwa-v3.2.0';
+const CACHE_NAME = 'cristian-neil-pwa-v7.0.0';
 
 const STATIC_ASSETS = [
   './',
@@ -14,6 +14,8 @@ const STATIC_ASSETS = [
   './manifest.webmanifest',
   './manifest.json',
   './offline.html',
+  './diagnostico.html',
+  './img/illimani_sunset.svg',
   './img/perfil.jpeg',
   './img/cup.jpeg',
   './img/girl.jpeg',
@@ -44,7 +46,7 @@ const STATIC_ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[PWA SW] Pre-cacheando recursos estáticos...');
+      console.log('[PWA SW] Pre-cacheando recursos estáticos v7.0.0...');
       return cache.addAll(STATIC_ASSETS);
     }).then(() => self.skipWaiting())
   );
@@ -56,6 +58,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keyList.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('[PWA SW] Eliminando caché antigua:', key);
             return caches.delete(key);
           }
         })
@@ -85,9 +88,10 @@ self.addEventListener('fetch', (event) => {
         }
         return networkRes;
       }).catch(() => {
-        if (req.destination === 'image') return caches.match('./icons/icon-192.png');
+        if (req.destination === 'image') {
+          return caches.match('./img/illimani_sunset.svg') || caches.match('./icons/icon-192.png');
+        }
       });
     })
   );
 });
-
